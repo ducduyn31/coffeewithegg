@@ -1,5 +1,6 @@
 <ul class="remote-menu">
-  <li><a routerLink="/">Home</a></li>
-  <li><a routerLink="ops">Ops</a></li>
+  <li *ngFor='let project of projects'>
+    <coffeewithegg-project-overview [project]='project'></coffeewithegg-project-overview>
+  </li>
 </ul>
 <router-outlet></router-outlet>

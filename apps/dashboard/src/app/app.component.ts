@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Project } from './app.types';
 
 @Component({
   selector: 'coffeewithegg-root',
@@ -6,5 +7,12 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'dashboard';
+  public projects: Project[] = [
+    {
+      name: 'Dashboard',
+    },
+    {
+      name: 'Ops'
+    },
+  ]
 }
