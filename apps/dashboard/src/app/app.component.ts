@@ -10,9 +10,15 @@ export class AppComponent {
   public projects: Project[] = [
     {
       name: 'Dashboard',
+      path: '/',
+      description: 'A page that contains list of projects and to navigate among them',
+      technologyUsed: ['angular'],
     },
     {
-      name: 'Ops'
+      name: 'Ops',
+      path: '/ops',
+      description: 'A page that contains list of projects and to navigate among them',
+      technologyUsed: ['angular'],
     },
   ]
 }

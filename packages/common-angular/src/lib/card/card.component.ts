@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'cwe-card',
@@ -7,7 +7,22 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class CardComponent implements OnInit {
-  constructor() {}
+  @ViewChild('card', {read: ElementRef}) cardElementRef: ElementRef | undefined;
 
-  ngOnInit(): void {}
+  constructor(
+    private elementRef: ElementRef
+  ) {}
+
+  ngOnInit(): void {
+    if (!this.cardElementRef) return;
+    const attributes = this.elementRef.nativeElement.attributes;
+    const cardAttributes = this.cardElementRef.nativeElement.attributes;
+
+    for (const attribute of attributes) {
+      if (attribute.name === 'ngModel' || cardAttributes.getNamedItemNS(attribute.namespaceURI, attribute.name)) {
+        continue;
+      }
+      this.cardElementRef.nativeElement.setAttributeNS(attribute.namespaceURI, attribute.name, attribute.value);
+    }
+  }
 }

@@ -11,7 +11,7 @@ module.exports = {
     '../src/lib/**/*.stories.@(js|jsx|ts|tsx)',
   ],
   addons: [...rootMain.addons],
-  staticDirs: [{ from: '../assets', to: '/assets/common'}],
+  staticDirs: [{ from: '../src/assets', to: '/assets/common'}],
   webpackFinal: async (config, { configType }) => {
     // apply any global webpack configs that might have been specified in .storybook/main.js
     if (rootMain.webpackFinal) {
