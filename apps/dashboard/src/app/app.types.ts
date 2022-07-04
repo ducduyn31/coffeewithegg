@@ -1,6 +1,6 @@
 export interface Project {
   name: string;
-  description?: string;
-  technologyUsed?: string[];
-  background?: string;
+  description?: string | null;
+  technologyUsed?: string[] | null;
+  background?: string | null;
 }

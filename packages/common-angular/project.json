@@ -7,8 +7,7 @@
       "executor": "@nrwl/angular:ng-packagr-lite",
       "outputs": ["dist/packages/common-angular"],
       "options": {
-        "project": "packages/common-angular/ng-package.json",
-        "assets": ["packages/common-angular/src/assets"]
+        "project": "packages/common-angular/ng-package.json"
       },
       "configurations": {
         "production": {
