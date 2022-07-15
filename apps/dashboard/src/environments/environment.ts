@@ -4,6 +4,7 @@
 
 export const environment = {
   production: false,
+  sunnyStreamEntry: 'http://localhost:4202/remoteEntry.js',
 };
 
 /*
