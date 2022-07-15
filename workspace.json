@@ -7,6 +7,8 @@
     "dashboard": "apps/dashboard",
     "dashboard-e2e": "apps/dashboard-e2e",
     "ops": "apps/ops",
-    "ops-e2e": "apps/ops-e2e"
+    "ops-e2e": "apps/ops-e2e",
+    "sunnystream": "apps/sunnystream",
+    "sunnystream-e2e": "apps/sunnystream-e2e"
   }
 }

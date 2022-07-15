@@ -20,5 +20,11 @@ export class AppComponent {
       description: 'A page that contains list of projects and to navigate among them',
       technologyUsed: ['angular'],
     },
+    {
+      name: 'Sunny Stream',
+      path: '/sunnystream',
+      description: 'A page that contains list of projects and to navigate among them',
+      technologyUsed: ['react'],
+    },
   ]
 }

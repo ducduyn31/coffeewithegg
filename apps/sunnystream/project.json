@@ -1,0 +1,101 @@
+{
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/sunnystream/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/web:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/sunnystream",
+        "index": "apps/sunnystream/src/index.html",
+        "baseHref": "/",
+        "main": "apps/sunnystream/src/main.tsx",
+        "polyfills": "apps/sunnystream/src/polyfills.ts",
+        "tsConfig": "apps/sunnystream/tsconfig.app.json",
+        "assets": [
+          "apps/sunnystream/src/favicon.ico",
+          "apps/sunnystream/src/assets"
+        ],
+        "styles": [],
+        "scripts": [],
+        "webpackConfig": "apps/sunnystream/webpack.config.js"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/sunnystream/src/environments/environment.ts",
+              "with": "apps/sunnystream/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/web:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4202,
+        "publicHost": "http://localhost:4202",
+        "buildTarget": "sunnystream:build",
+        "hmr": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "sunnystream:build:development"
+        },
+        "production": {
+          "buildTarget": "sunnystream:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/sunnystream/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/sunnystream"],
+      "options": {
+        "jestConfig": "apps/sunnystream/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "serve-static": {
+      "executor": "@nrwl/web:file-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "sunnystream:build",
+        "port": 4202
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "sunnystream:build:development"
+        },
+        "production": {
+          "buildTarget": "sunnystream:build:production"
+        }
+      }
+    }
+  },
+  "tags": []
+}

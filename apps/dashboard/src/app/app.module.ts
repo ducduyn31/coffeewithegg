@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { ProjectOverviewComponent } from './project-overview/project-overview.component';
 import { CommonAngularModule } from '@coffeewithegg/common-angular';
 import { CommonModule } from '@angular/common';
+import { AppRoutes } from './app.routes';
 
 @NgModule({
   declarations: [AppComponent, ProjectOverviewComponent],
@@ -14,13 +15,7 @@ import { CommonModule } from '@angular/common';
     CommonModule,
     CommonAngularModule,
     RouterModule.forRoot(
-      [
-        {
-          path: 'ops',
-          loadChildren: () =>
-            import('ops/Module').then((m) => m.RemoteEntryModule),
-        },
-      ],
+      AppRoutes,
       { initialNavigation: 'enabledBlocking' }
     ),
   ],
