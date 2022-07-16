@@ -12,4 +12,8 @@ module.exports = withModuleFederation({
    *   ['app2', 'https://app2.example.com'],
    * ]
    */
+  remotes: [
+    ['ops', 'https://ops.coffeewithegg.com'],
+    ['sunnystream', 'https://sunnystream.coffeewithegg.com/'],
+  ]
 });
