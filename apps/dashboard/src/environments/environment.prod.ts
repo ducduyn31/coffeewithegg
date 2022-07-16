@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  sunnyStreamEntry: '',
+  sunnyStreamEntry: 'https://sunnystream.coffeewithegg.com/remoteEntry.js',
 };
