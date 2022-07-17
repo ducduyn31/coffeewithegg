@@ -1,7 +1,6 @@
 {
   "projectType": "library",
   "sourceRoot": "packages/common-angular/src",
-  "prefix": "coffeewithegg",
   "targets": {
     "build": {
       "executor": "@nrwl/angular:ng-packagr-lite",
