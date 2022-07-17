@@ -1,5 +1,5 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
-import { AppComponent } from './app.component';
+import { moduleMetadata, Story, Meta } from '@storybook/angular'
+import { AppComponent } from './app.component'
 
 export default {
   title: 'AppComponent',
@@ -7,15 +7,13 @@ export default {
   decorators: [
     moduleMetadata({
       imports: [],
-    })
+    }),
   ],
-} as Meta<AppComponent>;
+} as Meta<AppComponent>
 
 const Template: Story<AppComponent> = (args: AppComponent) => ({
   props: args,
-});
+})
 
-
-export const Primary = Template.bind({});
-Primary.args = {
-}
+export const Primary = Template.bind({})
+Primary.args = {}

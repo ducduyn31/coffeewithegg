@@ -1,5 +1,5 @@
-import { moduleMetadata, Story, Meta } from '@storybook/angular';
-import { CardComponent } from './card.component';
+import { moduleMetadata, Story, Meta } from '@storybook/angular'
+import { CardComponent } from './card.component'
 
 export default {
   title: 'Card',
@@ -7,9 +7,9 @@ export default {
   decorators: [
     moduleMetadata({
       imports: [],
-    })
+    }),
   ],
-} as Meta<CardComponent>;
+} as Meta<CardComponent>
 
 const Template: Story<CardComponent> = (args: CardComponent) => ({
   props: args,
@@ -24,9 +24,7 @@ const Template: Story<CardComponent> = (args: CardComponent) => ({
         </cwe-card>
       </div>
     `,
-});
+})
 
-
-export const Primary = Template.bind({});
-Primary.args = {
-}
+export const Primary = Template.bind({})
+Primary.args = {}

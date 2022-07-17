@@ -1,6 +1,6 @@
-import { Meta, moduleMetadata, Story } from '@storybook/angular';
-import { ProjectOverviewComponent } from './project-overview.component';
-import { CommonAngularModule } from '@coffeewithegg/common-angular';
+import { Meta, moduleMetadata, Story } from '@storybook/angular'
+import { ProjectOverviewComponent } from './project-overview.component'
+import { CommonAngularModule } from '@coffeewithegg/common-angular'
 
 export default {
   title: 'ProjectOverviewComponent',
@@ -8,14 +8,15 @@ export default {
   decorators: [
     moduleMetadata({
       imports: [CommonAngularModule],
-    })
+    }),
   ],
-} as Meta<ProjectOverviewComponent>;
+} as Meta<ProjectOverviewComponent>
 
-const Template: Story<ProjectOverviewComponent> = (args: ProjectOverviewComponent) => ({
+const Template: Story<ProjectOverviewComponent> = (
+  args: ProjectOverviewComponent,
+) => ({
   props: args,
-  template:
-    `
+  template: `
       <coffeewithegg-project-overview [project]="
         {
           background: null,
@@ -25,9 +26,7 @@ const Template: Story<ProjectOverviewComponent> = (args: ProjectOverviewComponen
         }
       "></coffeewithegg-project-overview>
     `,
-});
+})
 
-
-export const Primary = Template.bind({});
-Primary.args = {
-}
+export const Primary = Template.bind({})
+Primary.args = {}

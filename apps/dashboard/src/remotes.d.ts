@@ -1,2 +1,2 @@
-declare module 'ops/Module';
-declare module 'sunnystream/Module';
+declare module 'ops/Module'
+declare module 'sunnystream/Module'
