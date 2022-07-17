@@ -9,7 +9,7 @@ import { Router } from '@angular/router'
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class ProjectOverviewComponent {
-  @Input('project') project!: Project
+  @Input() project!: Project
 
   constructor(private router: Router) {}
 

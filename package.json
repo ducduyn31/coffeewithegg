@@ -93,11 +93,5 @@
     "typescript": "~4.7.2",
     "webpack": "^5.64.0",
     "webpack-merge": "^5.8.0"
-  },
-  "lint-staged": {
-    "*.{js,json,css,scss,md,ts,html,graphql}": [
-      "yarn nx affected:lint --fix --parallel --uncommitted",
-      "yarn nx format:write --uncommitted"
-    ]
   }
 }

@@ -8,6 +8,4 @@ import { Component, Input, ViewEncapsulation } from '@angular/core'
 })
 export class IconComponent {
   @Input() name = ''
-
-  constructor() {}
 }
