@@ -1,10 +1,7 @@
 <button class="container" (click)="onClick()">
   <cwe-card>
     <div class="subcontainer">
-      <div
-        *ngIf="!!project?.technologyUsed && project.technologyUsed.length > 0"
-        class="technologies"
-      >
+      <div *ngIf="project?.technologyUsed?.length" class="technologies">
         <span *ngFor="let tech of project.technologyUsed">
           <cwe-icon [name]="tech"></cwe-icon>
         </span>
