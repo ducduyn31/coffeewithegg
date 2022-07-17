@@ -10,6 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: mansagroup/nrwl-nx-action@v2
         with:
-          targets: lint,test,build
+          fetch-depth: 0
+      - name: Derive appropriate SHAs for base and head for `nx affected` commands
+        id: setSHAs
+        uses: nrwl/nx-set-shas@v2
+      - name: Run platform tests
+        run: npx nx affected --target=test --parallel=3 --ci --code-coverage
+      - name: Build platform
+        run: npx nx affected --target=build --parallel=3
