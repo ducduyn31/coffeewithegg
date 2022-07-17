@@ -18,7 +18,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - run: npx nx workspace-lint
-      - run: npx nx format:check
       - run: npx nx affected --target=lint --parallel=3
       - name: Run platform tests
         run: npx nx affected --target=test --parallel=3 --ci --code-coverage
