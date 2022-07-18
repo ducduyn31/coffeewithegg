@@ -1,4 +1,1 @@
-export default [
-  'angular',
-  'react',
-];
+export default ['angular', 'react']

@@ -1,5 +1,5 @@
-const { withModuleFederation } = require('@nrwl/angular/module-federation');
-const config = require('./module-federation.config');
+const { withModuleFederation } = require('@nrwl/angular/module-federation')
+const config = require('./module-federation.config')
 module.exports = withModuleFederation({
   ...config,
   /*
@@ -12,4 +12,4 @@ module.exports = withModuleFederation({
    *   ['app2', 'https://app2.example.com'],
    * ]
    */
-});
+})

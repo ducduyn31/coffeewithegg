@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Project } from './app.types';
+import { Component } from '@angular/core'
+import { Project } from './app.types'
 
 @Component({
   selector: 'coffeewithegg-root',
@@ -11,19 +11,22 @@ export class AppComponent {
     {
       name: 'Dashboard',
       path: '/',
-      description: 'A page that contains list of projects and to navigate among them',
+      description:
+        'A page that contains list of projects and to navigate among them',
       technologyUsed: ['angular'],
     },
     {
       name: 'Ops',
       path: '/ops',
-      description: 'A page that contains list of projects and to navigate among them',
+      description:
+        'A page that contains list of projects and to navigate among them',
       technologyUsed: ['angular'],
     },
     {
       name: 'Sunny Stream',
       path: '/sunnystream',
-      description: 'A page that contains list of projects and to navigate among them',
+      description:
+        'A page that contains list of projects and to navigate among them',
       technologyUsed: ['react'],
     },
   ]
