@@ -1,0 +1,24 @@
+type Query {
+  projects(filters: ProjectFilter): [Project!]!
+}
+
+input ProjectFilter {
+  name: String
+  technologies: [String]
+
+  # pagination
+  count: Int
+  offset: Int
+}
+
+type Project {
+  id: ID!
+  name: String!
+  description: String
+  technologies: [Technology!]
+}
+
+type Technology {
+  name: String!
+  description: String
+}

@@ -1,0 +1,9 @@
+{
+  "executors": {
+    "go": {
+      "implementation": "./golang/impl",
+      "schema": "./golang/schema.json",
+      "description": "Generate code from graphql template for golang application"
+    }
+  }
+}

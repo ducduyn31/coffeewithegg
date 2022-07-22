@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "type": "object",
+  "cli": "nx",
+  "properties": {
+    "config": {
+      "type": "string",
+      "description": "path to config file. Eg: apps/your-app/gql-gen.yml"
+    }
+  }
+}

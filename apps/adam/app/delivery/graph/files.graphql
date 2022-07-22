@@ -1,0 +1,24 @@
+interface File {
+  id: ID!
+  name: String
+  extension: String
+  contentType: String
+}
+
+type FileLink implements File {
+  id: ID!
+  name: String
+  extension: String
+  contentType: String
+  link: String!
+}
+
+type DocumentReadable implements File {
+  id: ID!
+  name: String
+  extension: String
+  contentType: String
+  blob: String!
+  size: Int!
+  preview: String
+}
