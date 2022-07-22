@@ -2,6 +2,7 @@
   "$schema": "./node_modules/nx/schemas/workspace-schema.json",
   "version": 2,
   "projects": {
+    "adam": "apps/adam",
     "common-angular": "packages/common-angular",
     "common-angular-e2e": "apps/common-angular-e2e",
     "dashboard": "apps/dashboard",

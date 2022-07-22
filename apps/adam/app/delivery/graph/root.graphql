@@ -1,0 +1,4 @@
+input BasePaginationFilter {
+  count: Int
+  offset: Int
+}
