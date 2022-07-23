@@ -25,7 +25,7 @@
     "generate": {
       "executor": "./tools/executors/gqlgen:go",
       "options": {
-        "config": "apps/adam/gqlgen.yml"
+        "config": "gqlgen.yml"
       }
     }
   },

@@ -10,7 +10,8 @@ export default async function gqlgenExecutor(
   options: GqlGenOptions,
   context: ExecutorContext,
 ) {
-  console.info(`Executing "gqlgen generate"...`)
+  const appCwd = `${context.workspace.projects[context.projectName].root}`
+  console.info(`Executing "gqlgen generate" at ${appCwd}`)
   const verbose = context.isVerbose ? '--verbose' : ''
   if (verbose && verbose.length > 0) console.info(`VERBOSE: true`)
   console.info(`Options: ${JSON.stringify(options, null, 2)}`)
@@ -19,7 +20,7 @@ export default async function gqlgenExecutor(
 
   const { stdout, stderr } = await promisify(exec)(
     `go run github.com/99designs/gqlgen generate ${customConfig} ${verbose}`,
-    { cwd: context.cwd },
+    { cwd: appCwd },
   )
   console.log(stdout)
   console.error(stderr)

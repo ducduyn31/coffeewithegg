@@ -137,11 +137,15 @@ var util_1 = require('util')
 var child_process_1 = require('child_process')
 function gqlgenExecutor(options, context) {
   return __awaiter(this, void 0, void 0, function () {
-    var verbose, customConfig, _a, stdout, stderr, success
+    var appCwd, verbose, customConfig, _a, stdout, stderr, success
     return __generator(this, function (_b) {
       switch (_b.label) {
         case 0:
-          console.info('Executing "gqlgen generate"...')
+          appCwd = ''.concat(
+            context.workspace.projects[context.projectName].root,
+          )
+          console.log(appCwd)
+          console.info('Executing "gqlgen generate" at '.concat(appCwd))
           verbose = context.isVerbose ? '--verbose' : ''
           if (verbose && verbose.length > 0) console.info('VERBOSE: true')
           console.info('Options: '.concat(JSON.stringify(options, null, 2)))
@@ -154,7 +158,7 @@ function gqlgenExecutor(options, context) {
               'go run github.com/99designs/gqlgen generate '
                 .concat(customConfig, ' ')
                 .concat(verbose),
-              { cwd: context.cwd },
+              { cwd: appCwd },
             ),
           ]
         case 1:
