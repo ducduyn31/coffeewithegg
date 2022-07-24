@@ -6,16 +6,18 @@ package graph
 import (
 	"coffeewithegg/apps/adam/graph/generated"
 	"coffeewithegg/apps/adam/graph/model"
+	"coffeewithegg/apps/adam/project/service"
 	"context"
-	"fmt"
 )
 
 // Projects is the resolver for the projects field.
 func (r *queryResolver) Projects(ctx context.Context, filters *model.ProjectFilter) ([]*model.Project, error) {
-	panic(fmt.Errorf("not implemented"))
+	return projectService.GetProjects(ctx, filters)
 }
 
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
 type queryResolver struct{ *Resolver }
+
+var projectService = service.NewProjectService()
