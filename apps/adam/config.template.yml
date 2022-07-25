@@ -1,0 +1,8 @@
+# Copy this file to config.yml
+database:
+  host: "your db host"
+  port: "your db port"
+  user: "your db username"
+  pass: "your db password"
+  name: "your db name"
+
