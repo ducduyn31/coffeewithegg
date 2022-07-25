@@ -1,10 +1,13 @@
 package repository
 
-import "gorm.io/gorm"
+import (
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
 
 type Technology struct {
 	gorm.Model
-	ID          uint `gorm:"primaryKey"`
+	ID          uuid.UUID `gorm:"primaryKey;type:uuid;default:gen_random_uuid()"`
 	Name        string
 	Description string
 	Key         string     `gorm:"not null"`

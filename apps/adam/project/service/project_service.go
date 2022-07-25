@@ -4,17 +4,21 @@ import (
 	"coffeewithegg/apps/adam/graph/model"
 	"coffeewithegg/apps/adam/project/repository"
 	"context"
-	"github.com/google/wire"
+	"errors"
+	"fmt"
+	"github.com/golobby/container/v3"
+	"github.com/labstack/gommon/log"
 	"github.com/thoas/go-funk"
 	"gorm.io/gorm"
-	"strconv"
+	"gorm.io/gorm/clause"
 )
 
-type projectService struct {
-	db *gorm.DB
+type ProjectService struct {
+	db          *gorm.DB
+	techService *TechnologyService
 }
 
-func (service *projectService) GetProjects(ctx context.Context, filters *model.ProjectFilter) ([]*model.Project, error) {
+func (service *ProjectService) GetProjects(_ context.Context, filters *model.ProjectFilter) ([]*model.Project, error) {
 	// Offset Filter
 	var offset int
 	if filters.Offset == nil || *filters.Offset <= 0 {
@@ -33,27 +37,84 @@ func (service *projectService) GetProjects(ctx context.Context, filters *model.P
 
 	var projectDBOs []*repository.Project
 
-	service.db.Find(&projectDBOs).Offset(offset).Limit(limit)
+	service.db.Preload("Technologies").Offset(offset).Limit(limit).Find(&projectDBOs)
 
 	return funk.Map(projectDBOs, mapProjectDBOtoProject).([]*model.Project), nil
 }
 
-func mapProjectDBOtoProject(projectDBO *repository.Project) *model.Project {
-	return &model.Project{
-		ID:           strconv.Itoa(int(projectDBO.ID)),
-		Name:         projectDBO.Name,
-		Description:  nil,
-		Technologies: nil,
+func (service *ProjectService) UpsertProject(_ context.Context, input *model.ProjectInput) (*model.Project, error) {
+	var err error
+
+	err = validateProjectInput(input)
+	if err != nil {
+		return nil, err
 	}
+
+	// Get existing project
+	var project *repository.Project
+	if input.ID != nil {
+		result := service.db.First(&project, input.ID)
+		if result.RowsAffected == 0 {
+			return nil, errors.New(fmt.Sprintf("Project Id=%s does not exist", *input.ID))
+		}
+	}
+
+	// Update/Create the project
+	err = service.db.Transaction(func(tx *gorm.DB) error {
+		if project == nil {
+			project = &repository.Project{}
+		}
+
+		if input.Key != nil {
+			project.Key = *input.Key
+		}
+
+		if input.Name != nil {
+			project.Name = *input.Name
+		}
+
+		if input.Description != nil {
+			project.Description = *input.Description
+		}
+
+		if len(input.Technologies) > 0 {
+			technologies, err := service.techService.UpsertTechnologiesTransaction(tx, input.Technologies)
+			if err != nil {
+				return err
+			}
+			project.Technologies = technologies
+		}
+
+		tx.Clauses(clause.OnConflict{
+			UpdateAll: true,
+		}).Create(&project)
+
+		return nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return mapProjectDBOtoProject(project), nil
 }
 
-func newProjectService(db *gorm.DB) *projectService {
-	return &projectService{
-		db: db,
+func NewProjectService() *ProjectService {
+	var db *gorm.DB
+	err := container.Resolve(&db)
+	if err != nil {
+		log.Fatal("DB is not initialized")
+		return nil
 	}
-}
 
-func NewProjectService() *projectService {
-	wire.Build(newProjectService)
-	return &projectService{}
+	var techService *TechnologyService
+	err = container.Resolve(&techService)
+	if err != nil {
+		log.Fatal("TechnologyService is not initialized")
+		return nil
+	}
+
+	return &ProjectService{
+		db:          db,
+		techService: techService,
+	}
 }

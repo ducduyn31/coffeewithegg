@@ -5,7 +5,8 @@ go 1.18
 require (
 	github.com/99designs/gqlgen v0.17.13
 	github.com/fsnotify/fsnotify v1.5.4
-	github.com/google/wire v0.5.0
+	github.com/golobby/container/v3 v3.2.1
+	github.com/google/uuid v1.1.2
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/labstack/gommon v0.3.1
 	github.com/spf13/viper v1.12.0

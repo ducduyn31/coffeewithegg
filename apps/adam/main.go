@@ -1,12 +1,14 @@
 package main
 
 import (
+	"coffeewithegg/apps/adam/app/service"
 	"coffeewithegg/apps/adam/graph"
 	"coffeewithegg/apps/adam/graph/generated"
 	"coffeewithegg/apps/adam/migrations"
 	"fmt"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/fsnotify/fsnotify"
+	"github.com/golobby/container/v3"
 	"github.com/labstack/echo/v4"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
@@ -74,6 +76,13 @@ func initializeDB() *gorm.DB {
 		log.Fatal(err)
 	}
 
+	err = container.Singleton(func() *gorm.DB {
+		return db
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	return db
 }
 
@@ -112,5 +121,11 @@ func migrate(db *gorm.DB) {
 func main() {
 	db := initializeDB()
 	migrate(db)
+
+	err := service.InitServicesContainer()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	startServer()
 }

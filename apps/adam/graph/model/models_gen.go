@@ -35,6 +35,7 @@ func (FileLink) IsFile() {}
 
 type Project struct {
 	ID           string        `json:"id"`
+	Key          string        `json:"key"`
 	Name         string        `json:"name"`
 	Description  *string       `json:"description"`
 	Technologies []*Technology `json:"technologies"`
@@ -47,7 +48,24 @@ type ProjectFilter struct {
 	Offset       *int      `json:"offset"`
 }
 
+type ProjectInput struct {
+	ID           *string            `json:"id"`
+	Key          *string            `json:"key"`
+	Name         *string            `json:"name"`
+	Description  *string            `json:"description"`
+	Technologies []*TechnologyInput `json:"technologies"`
+}
+
 type Technology struct {
+	ID          string  `json:"id"`
+	Key         string  `json:"key"`
 	Name        string  `json:"name"`
+	Description *string `json:"description"`
+}
+
+type TechnologyInput struct {
+	ID          *string `json:"id"`
+	Key         *string `json:"key"`
+	Name        *string `json:"name"`
 	Description *string `json:"description"`
 }

@@ -8,22 +8,35 @@ import (
 	"coffeewithegg/apps/adam/graph/model"
 	"coffeewithegg/apps/adam/project/service"
 	"context"
+
+	container "github.com/golobby/container/v3"
 )
+
+// UpsertProject is the resolver for the upsertProject field.
+func (r *mutationResolver) UpsertProject(ctx context.Context, input *model.ProjectInput) (*model.Project, error) {
+	var projectService *service.ProjectService
+	err := container.Resolve(&projectService)
+	if err != nil {
+		return nil, err
+	}
+	return projectService.UpsertProject(ctx, input)
+}
 
 // Projects is the resolver for the projects field.
 func (r *queryResolver) Projects(ctx context.Context, filters *model.ProjectFilter) ([]*model.Project, error) {
+	var projectService *service.ProjectService
+	err := container.Resolve(&projectService)
+	if err != nil {
+		return nil, err
+	}
 	return projectService.GetProjects(ctx, filters)
 }
+
+// Mutation returns generated.MutationResolver implementation.
+func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//    it when you're done.
-//  - You have helper methods in this file. Move them out to keep these resolver files clean.
-var projectService = service.NewProjectService()
