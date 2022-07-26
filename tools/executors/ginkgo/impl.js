@@ -135,25 +135,53 @@ var __generator =
 exports.__esModule = true
 var util_1 = require('util')
 var child_process_1 = require('child_process')
-function wireExecutor(options, context) {
+var path = require('path')
+function ginkgoExecutor(options, context) {
+  var _a, _b, _c, _d, _e
   return __awaiter(this, void 0, void 0, function () {
-    var appCwd, _a, stdout, stderr, success
-    return __generator(this, function (_b) {
-      switch (_b.label) {
+    var atPath, appCwd, extraOptions, isRecursive, _f, stdout, stderr, success
+    return __generator(this, function (_g) {
+      switch (_g.label) {
         case 0:
-          appCwd = ''.concat(
-            context.workspace.projects[context.projectName].root,
+          atPath =
+            (_c =
+              (_b =
+                (_a = options._) === null || _a === void 0
+                  ? void 0
+                  : _a.find(function (op) {
+                      return op.startsWith('at=')
+                    })) === null || _b === void 0
+                ? void 0
+                : _b.substring(3)) !== null && _c !== void 0
+              ? _c
+              : ''
+          appCwd = path.join(
+            ''.concat(context.workspace.projects[context.projectName].root),
+            atPath,
           )
-          console.info('Executing "wire" at '.concat(appCwd))
+          extraOptions =
+            (_e =
+              (_d = options._) === null || _d === void 0
+                ? void 0
+                : _d.join(' ')) !== null && _e !== void 0
+              ? _e
+              : ''
+          console.info(
+            'Executing "ginkgo '.concat(extraOptions, '" at ').concat(appCwd),
+          )
+          console.info('Options: '.concat(JSON.stringify(options, null, 2)))
+          isRecursive = options.ci ? '-r' : ''
           return [
             4 /*yield*/,
             (0, util_1.promisify)(child_process_1.exec)(
-              'go run github.com/google/wire/cmd/wire',
+              'go run github.com/onsi/ginkgo/v2/ginkgo '
+                .concat(isRecursive, ' ')
+                .concat(extraOptions),
               { cwd: appCwd },
             ),
           ]
         case 1:
-          ;(_a = _b.sent()), (stdout = _a.stdout), (stderr = _a.stderr)
+          ;(_f = _g.sent()), (stdout = _f.stdout), (stderr = _f.stderr)
           console.log(stdout)
           console.error(stderr)
           success = !stderr
@@ -162,4 +190,4 @@ function wireExecutor(options, context) {
     })
   })
 }
-exports['default'] = wireExecutor
+exports['default'] = ginkgoExecutor

@@ -17,9 +17,13 @@ type TechnologyService struct {
 func (service *TechnologyService) UpsertTechnologiesTransaction(tx *gorm.DB, input []*model.TechnologyInput) ([]repository.Technology, error) {
 	technologies := funk.Map(input, mapTechnologyToTechnologyDBO).([]*repository.Technology)
 
-	tx.Clauses(clause.OnConflict{
+	result := tx.Clauses(clause.OnConflict{
 		UpdateAll: true,
 	}).CreateInBatches(technologies, 200)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
 
 	return funk.Map(technologies, copyTechnologyDBO).([]repository.Technology), nil
 }

@@ -1,0 +1,9 @@
+{
+  "executors": {
+    "test": {
+      "implementation": "./impl",
+      "schema": "./schema.json",
+      "description": "Run test using ginkgo"
+    }
+  }
+}

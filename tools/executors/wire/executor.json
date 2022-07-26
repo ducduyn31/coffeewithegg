@@ -1,9 +1,0 @@
-{
-  "executors": {
-    "generate": {
-      "implementation": "impl",
-      "schema": "schema.json",
-      "description": "Generate code using wire compile time dependency injection"
-    }
-  }
-}

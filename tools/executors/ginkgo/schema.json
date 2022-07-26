@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "type": "object",
+  "cli": "nx",
+  "properties": {
+    "ci": {
+      "type": "boolean",
+      "description": "recursively run all test suites"
+    },
+    "at": {
+      "type": "string",
+      "description": "where to execute the command"
+    }
+  }
+}

@@ -85,9 +85,13 @@ func (service *ProjectService) UpsertProject(_ context.Context, input *model.Pro
 			project.Technologies = technologies
 		}
 
-		tx.Clauses(clause.OnConflict{
+		result := tx.Clauses(clause.OnConflict{
 			UpdateAll: true,
 		}).Create(&project)
+
+		if result.RowsAffected == 0 {
+			return result.Statement.Error
+		}
 
 		return nil
 	})
