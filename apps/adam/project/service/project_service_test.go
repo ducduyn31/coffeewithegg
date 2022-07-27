@@ -186,7 +186,9 @@ var _ = Describe("ProjectService", func() {
 			mock.
 				ExpectQuery(regexp.QuoteMeta(`SELECT * FROM "projects" WHERE "projects"."id" = $1 AND "projects"."deleted_at" IS NULL ORDER BY "projects"."id" LIMIT 1`)).
 				WithArgs("1").
-				WillReturnError(gorm.ErrRecordNotFound)
+				WillReturnRows(
+					sqlmock.NewRows([]string{"id", "name", "key", "description"}),
+				)
 			var id = "1"
 			input := &model.ProjectInput{
 				ID: &id,
@@ -271,9 +273,6 @@ var _ = Describe("ProjectService", func() {
 				Description:  &projDescription,
 				Technologies: nil,
 			}
-
-			mock.ExpectBegin()
-
 		})
 
 		AfterEach(func() {
@@ -323,11 +322,13 @@ var _ = Describe("ProjectService", func() {
 				techInput.Name = &techName
 				techInput.Description = &techDesc
 
+				mock.ExpectBegin()
 				mock.
-					ExpectExec("SAVEPOINT").
+					ExpectExec(regexp.QuoteMeta(`SAVEPOINT`)).
+					WithArgs().
 					WillReturnResult(sqlmock.NewResult(1, 1))
 				mock.
-					ExpectQuery(`INSERT INTO "technologies"`).
+					ExpectQuery(regexp.QuoteMeta(`INSERT INTO "technologies" ("created_at","updated_at","deleted_at","name","description","key") VALUES ($1,$2,$3,$4,$5,$6) ON CONFLICT ("id") DO UPDATE SET "updated_at"=$7,"deleted_at"="excluded"."deleted_at","name"="excluded"."name","description"="excluded"."description","key"="excluded"."key" RETURNING "id","id"`)).
 					WithArgs(AnyTime{}, AnyTime{}, Any{}, "tech name", "tech description", "techKey", AnyTime{}).
 					WillReturnRows(
 						sqlmock.NewRows([]string{"id", "name", "key", "description"}).
@@ -340,6 +341,21 @@ var _ = Describe("ProjectService", func() {
 						sqlmock.NewRows([]string{"id", "name", "key", "description"}).
 							AddRow("1", "name", "key", "description"),
 					)
+				mock.
+					ExpectQuery(regexp.QuoteMeta(`INSERT INTO "technologies" ("created_at","updated_at","deleted_at","name","description","key","id") VALUES ($1,$2,$3,$4,$5,$6,$7) ON CONFLICT DO NOTHING RETURNING "id","id"`)).
+					WithArgs(AnyTime{}, AnyTime{}, Any{}, "tech name", "tech description", "techKey", "910f362e-4824-4c3d-a95d-e1d9e5f30f4a").
+					WillReturnRows(
+						sqlmock.NewRows([]string{"id", "name", "key", "description"}).
+							AddRow("910f362e-4824-4c3d-a95d-e1d9e5f30f4a", "tech name", "techKey", "tech description"),
+					)
+				mock.
+					ExpectQuery(regexp.QuoteMeta(`INSERT INTO "project_technologies" ("project_id","technology_id") VALUES ($1,$2) ON CONFLICT DO NOTHING RETURNING "technology_id"`)).
+					WithArgs(1, "910f362e-4824-4c3d-a95d-e1d9e5f30f4a").
+					WillReturnRows(
+						sqlmock.NewRows([]string{"project_id", "technology_id"}).
+							AddRow("1", "910f362e-4824-4c3d-a95d-e1d9e5f30f4a"),
+					)
+
 				mock.ExpectCommit()
 
 				// When
@@ -364,6 +380,7 @@ var _ = Describe("ProjectService", func() {
 				techInput.Name = &techName
 				techInput.Description = &techDesc
 
+				mock.ExpectBegin()
 				mock.
 					ExpectExec("SAVEPOINT").
 					WillReturnResult(sqlmock.NewResult(1, 1))
