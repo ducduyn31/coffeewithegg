@@ -5,6 +5,7 @@ import * as path from 'path'
 
 export interface GinkgoOptions {
   ci: boolean
+  ignoreExtra: boolean
   _: string[]
 }
 
@@ -18,7 +19,8 @@ export default async function ginkgoExecutor(
     `${context.workspace.projects[context.projectName].root}`,
     atPath,
   )
-  const extraOptions = options._?.join(' ') ?? ''
+  const extraOptions =
+    !options?.ignoreExtra && options._ ? options._?.join(' ') : ''
 
   console.info(`Executing "ginkgo ${extraOptions}" at ${appCwd}`)
 

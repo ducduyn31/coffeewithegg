@@ -137,11 +137,11 @@ var util_1 = require('util')
 var child_process_1 = require('child_process')
 var path = require('path')
 function ginkgoExecutor(options, context) {
-  var _a, _b, _c, _d, _e
+  var _a, _b, _c, _d
   return __awaiter(this, void 0, void 0, function () {
-    var atPath, appCwd, extraOptions, isRecursive, _f, stdout, stderr, success
-    return __generator(this, function (_g) {
-      switch (_g.label) {
+    var atPath, appCwd, extraOptions, isRecursive, _e, stdout, stderr, success
+    return __generator(this, function (_f) {
+      switch (_f.label) {
         case 0:
           atPath =
             (_c =
@@ -160,11 +160,12 @@ function ginkgoExecutor(options, context) {
             atPath,
           )
           extraOptions =
-            (_e =
-              (_d = options._) === null || _d === void 0
+            !(options === null || options === void 0
+              ? void 0
+              : options.ignoreExtra) && options._
+              ? (_d = options._) === null || _d === void 0
                 ? void 0
-                : _d.join(' ')) !== null && _e !== void 0
-              ? _e
+                : _d.join(' ')
               : ''
           console.info(
             'Executing "ginkgo '.concat(extraOptions, '" at ').concat(appCwd),
@@ -181,7 +182,7 @@ function ginkgoExecutor(options, context) {
             ),
           ]
         case 1:
-          ;(_f = _g.sent()), (stdout = _f.stdout), (stderr = _f.stderr)
+          ;(_e = _f.sent()), (stdout = _e.stdout), (stderr = _e.stderr)
           console.log(stdout)
           console.error(stderr)
           success = !stderr

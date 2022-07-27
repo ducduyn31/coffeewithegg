@@ -19,7 +19,8 @@
     "test": {
       "executor": "./tools/executors/ginkgo:test",
       "options": {
-        "ci": true
+        "ci": true,
+        "ignoreExtra": true
       }
     },
     "lint": {
