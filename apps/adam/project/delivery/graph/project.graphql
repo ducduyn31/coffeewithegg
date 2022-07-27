@@ -1,0 +1,46 @@
+type Mutation {
+  upsertProject(input: ProjectInput): Project
+}
+
+type Query {
+  projects(filters: ProjectFilter): [Project!]!
+}
+
+input ProjectInput {
+  id: ID
+  key: String
+  name: String
+  description: String
+  technologies: [TechnologyInput]
+}
+
+input TechnologyInput {
+  id: ID
+  key: String
+  name: String
+  description: String
+}
+
+input ProjectFilter {
+  name: String
+  technologies: [String]
+
+  # pagination
+  count: Int
+  offset: Int
+}
+
+type Project {
+  id: ID!
+  key: String!
+  name: String!
+  description: String
+  technologies: [Technology!]
+}
+
+type Technology {
+  id: ID!
+  key: String!
+  name: String!
+  description: String
+}
