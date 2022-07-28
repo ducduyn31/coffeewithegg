@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@coffeewithegg/common-angular": ["packages/common-angular/src/index.ts"]
+      "@coffeewithegg/common-angular": ["packages/common-angular/src/index.ts"],
+      "@coffeewithegg/data-access": ["packages/data-access/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

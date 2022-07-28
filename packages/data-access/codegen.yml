@@ -1,0 +1,13 @@
+overwrite: true
+schema:
+  - 'apps/adam/**/*.graphql'
+  - 'packages/data-access/src/lib/graphql/**/*.graphql'
+generates:
+  packages/data-access/src/lib/generated/graphql.ts:
+    documents:
+      - 'apps/adam/**/*.graphql'
+      - 'packages/data-access/src/lib/graphql/**/*.graphql'
+    plugins:
+      - 'typescript'
+      - 'typescript-operations'
+      - 'typescript-apollo-angular'

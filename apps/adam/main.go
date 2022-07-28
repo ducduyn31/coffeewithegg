@@ -10,6 +10,7 @@ import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/golobby/container/v3"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	_ "gorm.io/driver/postgres"
@@ -49,6 +50,8 @@ func init() {
 	viper.SetDefault(`database.pass`, `password`)
 	viper.SetDefault(`database.name`, `adam`)
 	viper.SetDefault(`database.location`, `Asia/Ho_Chi_Minh`)
+	viper.SetDefault(`database.slow-threshold`, 1)
+	viper.SetDefault(`database.show-sql`, false)
 }
 
 func initializeDB() *gorm.DB {
@@ -59,13 +62,20 @@ func initializeDB() *gorm.DB {
 	dbName := viper.GetString(`database.name`)
 	connection := fmt.Sprintf("user=%s password=%s host=%s port=%s dbname=%s", dbUser, dbPass, dbHost, dbPort, dbName)
 
+	slowThreshold := viper.GetInt64(`database.slow-threshold`)
+	showSql := viper.GetBool(`database.show-sql`)
+	logLevel := logger.Error
+	if showSql {
+		logLevel = logger.Info
+	}
+
 	sqlLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags),
 		logger.Config{
-			SlowThreshold:             time.Second,
+			SlowThreshold:             time.Duration(slowThreshold) * time.Second,
 			Colorful:                  true,
 			IgnoreRecordNotFoundError: false,
-			LogLevel:                  logger.Info,
+			LogLevel:                  logLevel,
 		},
 	)
 
@@ -88,6 +98,12 @@ func initializeDB() *gorm.DB {
 
 func startServer() {
 	e := echo.New()
+
+	allowOrigins := viper.GetStringSlice("server.cors")
+
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: allowOrigins,
+	}))
 
 	graphqlHandler := handler.NewDefaultServer(
 		generated.NewExecutableSchema(

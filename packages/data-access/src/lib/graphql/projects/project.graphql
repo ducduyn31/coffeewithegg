@@ -1,0 +1,14 @@
+query GetAllProjects($filter: ProjectFilter) {
+  projects(filters: $filter) {
+    id
+    key
+    name
+    description
+    technologies {
+      id
+      key
+      name
+      description
+    }
+  }
+}

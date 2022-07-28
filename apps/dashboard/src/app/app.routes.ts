@@ -4,6 +4,7 @@ import {
   WebComponentWrapperOptions,
 } from '@angular-architects/module-federation-tools'
 import { environment } from '../environments/environment'
+import { DashboardComponent } from './dashboard/dashboard.component'
 
 export const AppRoutes: Routes = [
   {
@@ -19,5 +20,9 @@ export const AppRoutes: Routes = [
       exposedModule: './Module',
       elementName: 'app-sunnystream',
     } as WebComponentWrapperOptions,
+  },
+  {
+    path: '',
+    component: DashboardComponent,
   },
 ]
