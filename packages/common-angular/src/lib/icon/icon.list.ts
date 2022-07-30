@@ -1,1 +1,9 @@
-export default ['angular', 'react']
+export default [
+  'angular',
+  'collapse',
+  'dashboard',
+  'hamburger',
+  'ops',
+  'react',
+  'sunnystream',
+]

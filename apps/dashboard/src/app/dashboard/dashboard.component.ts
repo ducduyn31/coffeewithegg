@@ -1,7 +1,9 @@
-import { Component, ViewEncapsulation, NgModule, OnInit } from '@angular/core'
+import { Component, NgModule, OnInit, ViewEncapsulation } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { map, Observable } from 'rxjs'
-import { GetAllProjectsGQL, Project } from '@coffeewithegg/data-access'
+import { Project } from '@coffeewithegg/data-access'
+import { ProjectService } from '../project.service'
+import { ProjectOverviewComponent } from '../project-overview/project-overview.component'
+import { CommonAngularModule } from '@coffeewithegg/common-angular'
 
 @Component({
   selector: 'coffeewithegg-dashboard',
@@ -10,20 +12,20 @@ import { GetAllProjectsGQL, Project } from '@coffeewithegg/data-access'
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class DashboardComponent implements OnInit {
-  projects$: Observable<Project[]> = new Observable<Project[]>()
+  projects: Map<string, Project> = new Map<string, Project>()
 
-  constructor(private getAllProjectsGQL: GetAllProjectsGQL) {}
+  constructor(private projectService: ProjectService) {}
 
   ngOnInit(): void {
-    this.projects$ = this.getAllProjectsGQL
-      .watch()
-      .valueChanges.pipe(map((result) => result.data.projects))
+    this.projectService
+      .getAllProjectsMappings()
+      .subscribe((result) => (this.projects = result))
   }
 }
 
 @NgModule({
-  imports: [CommonModule],
-  declarations: [DashboardComponent],
+  imports: [CommonModule, CommonAngularModule],
+  declarations: [DashboardComponent, ProjectOverviewComponent],
   exports: [DashboardComponent],
 })
 export class DashboardComponentModule {}

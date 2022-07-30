@@ -14,15 +14,17 @@ type TechnologyService struct {
 	db *gorm.DB
 }
 
-func (service *TechnologyService) UpsertTechnologiesTransaction(tx *gorm.DB, input []*model.TechnologyInput) ([]repository.Technology, error) {
+func (service *TechnologyService) UpsertTechnologiesForProjectTransaction(tx *gorm.DB, input []*model.TechnologyInput, project *repository.Project) ([]repository.Technology, error) {
 	technologies := funk.Map(input, mapTechnologyToTechnologyDBO).([]*repository.Technology)
 
-	result := tx.Clauses(clause.OnConflict{
-		UpdateAll: true,
-	}).CreateInBatches(technologies, 200)
+	err := tx.Session(&gorm.Session{FullSaveAssociations: true}).
+		Model(&project).
+		Clauses(clause.OnConflict{UpdateAll: true}).
+		Association("Technologies").
+		Replace(technologies)
 
-	if result.Error != nil {
-		return nil, result.Error
+	if err != nil {
+		return nil, err
 	}
 
 	return funk.Map(technologies, copyTechnologyDBO).([]repository.Technology), nil

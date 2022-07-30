@@ -1,1 +1,29 @@
-<p>sidebar works!</p>
+<div
+  class="bg-white h-[100vh] flex flex-col items-center p-24"
+  [ngClass]="expand ? 'w-[371px]' : 'w-72'"
+>
+  <div class="w-full">
+    <cwe-icon-button
+      [name]="expand ? 'collapse' : 'hamburger'"
+      variant="transparent"
+      (btnClick)="toggleExpand()"
+    ></cwe-icon-button>
+  </div>
+  <ul
+    class="overflow-hidden flex flex-col justify-center gap-y-12 w-full h-full"
+  >
+    <li
+      class="text-pl text-black whitespace-nowrap text-clip"
+      *ngFor="let project of projects"
+    >
+      <button
+        class="flex gap-x-24 w-full h-[44px] hover:bg-primary hover:bg-opacity-5 hover:rounded-8 items-center"
+        [ngClass]="expand ? 'p-6' : 'p-2 '"
+        (click)="onClick(project.key)"
+      >
+        <cwe-icon [name]="project.key"></cwe-icon>
+        <span *ngIf="expand">{{ project.name }}</span>
+      </button>
+    </li>
+  </ul>
+</div>

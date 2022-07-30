@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser'
 
 import { AppComponent } from './app.component'
 import { RouterModule } from '@angular/router'
-import { ProjectOverviewComponent } from './project-overview/project-overview.component'
 import { CommonAngularModule } from '@coffeewithegg/common-angular'
 import { CommonModule } from '@angular/common'
 import { AppRoutes } from './app.routes'
@@ -16,7 +15,7 @@ import { environment } from '../environments/environment'
 import { HttpClientModule } from '@angular/common/http'
 
 @NgModule({
-  declarations: [AppComponent, ProjectOverviewComponent, SidebarComponent],
+  declarations: [AppComponent, SidebarComponent],
   imports: [
     ApolloModule,
     BrowserModule,

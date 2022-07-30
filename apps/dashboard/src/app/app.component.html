@@ -1,10 +1,9 @@
-<!--<ul class="remote-menu grid grid-cols-5 bg-bg01">-->
-<!--  <li *ngFor="let project of projects">-->
-<!--    <coffeewithegg-project-overview-->
-<!--      [project]="project"-->
-<!--    ></coffeewithegg-project-overview>-->
-<!--  </li>-->
-<!--</ul>-->
-<div class="bg-bg01 w-[100vw] h-[100vh]">
-  <router-outlet></router-outlet>
+<div class="bg-bg01 w-[100vw] h-[100vh] grid grid-cols-12 overflow-y-scroll">
+  <coffeewithegg-sidebar
+    *ngIf="shouldShowSidebar"
+    class="fixed col-span-2 z-50"
+  ></coffeewithegg-sidebar>
+  <div class="col-span-10 col-start-3">
+    <router-outlet></router-outlet>
+  </div>
 </div>
