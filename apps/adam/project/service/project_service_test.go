@@ -206,12 +206,16 @@ var _ = Describe("ProjectService", func() {
 			// Given
 			mock.ExpectBegin()
 			mock.
-				ExpectQuery(regexp.QuoteMeta(`INSERT INTO "projects" ("created_at","updated_at","deleted_at","name","key","description") VALUES ($1,$2,$3,$4,$5,$6) ON CONFLICT ("id") DO UPDATE SET "updated_at"=$7,"deleted_at"="excluded"."deleted_at","name"="excluded"."name","key"="excluded"."key","description"="excluded"."description" RETURNING "id"`)).
-				WithArgs(AnyTime{}, AnyTime{}, Any{}, "name", "key", "description", AnyTime{}).
+				ExpectQuery(regexp.QuoteMeta(`INSERT INTO "projects"`)).
+				WithArgs(AnyTime{}, AnyTime{}, Any{}, "", "", "").
 				WillReturnRows(
 					sqlmock.NewRows([]string{"id", "name", "key", "description"}).
-						AddRow("1", "name", "key", "description"),
+						AddRow("1", "", "", ""),
 				)
+			mock.
+				ExpectExec(regexp.QuoteMeta(`UPDATE "projects" SET`)).
+				WithArgs(AnyTime{}, AnyTime{}, Any{}, "name", "key", "description", 1).
+				WillReturnResult(sqlmock.NewResult(1, 1))
 			mock.ExpectCommit()
 
 			var name = "name"
@@ -235,8 +239,8 @@ var _ = Describe("ProjectService", func() {
 			// Given
 			mock.ExpectBegin()
 			mock.
-				ExpectQuery(regexp.QuoteMeta(`INSERT INTO "projects" ("created_at","updated_at","deleted_at","name","key","description") VALUES ($1,$2,$3,$4,$5,$6) ON CONFLICT ("id") DO UPDATE SET "updated_at"=$7,"deleted_at"="excluded"."deleted_at","name"="excluded"."name","key"="excluded"."key","description"="excluded"."description" RETURNING "id"`)).
-				WithArgs(AnyTime{}, AnyTime{}, Any{}, "name", "key", "description", AnyTime{}).
+				ExpectQuery(regexp.QuoteMeta(`INSERT INTO "projects"`)).
+				WithArgs(AnyTime{}, AnyTime{}, Any{}, "", "", "").
 				WillReturnError(errors.New("failed to insert data"))
 			mock.ExpectRollback()
 
@@ -324,38 +328,36 @@ var _ = Describe("ProjectService", func() {
 
 				mock.ExpectBegin()
 				mock.
-					ExpectExec(regexp.QuoteMeta(`SAVEPOINT`)).
-					WithArgs().
+					ExpectQuery(regexp.QuoteMeta(`INSERT INTO "projects"`)).
+					WithArgs(AnyTime{}, AnyTime{}, Any{}, "", "", "").
+					WillReturnRows(
+						sqlmock.NewRows([]string{"id", "name", "key", "description"}).
+							AddRow("1", "", "", ""),
+					)
+				mock.
+					ExpectExec(regexp.QuoteMeta(`UPDATE "projects" SET`)).
+					WithArgs(AnyTime{}, AnyTime{}, "name", "key", "description", 1).
 					WillReturnResult(sqlmock.NewResult(1, 1))
 				mock.
-					ExpectQuery(regexp.QuoteMeta(`INSERT INTO "technologies" ("created_at","updated_at","deleted_at","name","description","key") VALUES ($1,$2,$3,$4,$5,$6) ON CONFLICT ("id") DO UPDATE SET "updated_at"=$7,"deleted_at"="excluded"."deleted_at","name"="excluded"."name","description"="excluded"."description","key"="excluded"."key" RETURNING "id","id"`)).
+					ExpectQuery(regexp.QuoteMeta(`INSERT INTO "technologies"`)).
 					WithArgs(AnyTime{}, AnyTime{}, Any{}, "tech name", "tech description", "techKey", AnyTime{}).
 					WillReturnRows(
 						sqlmock.NewRows([]string{"id", "name", "key", "description"}).
 							AddRow("910f362e-4824-4c3d-a95d-e1d9e5f30f4a", "tech name", "techKey", "tech description"),
 					)
 				mock.
-					ExpectQuery(regexp.QuoteMeta(`INSERT INTO "projects" ("created_at","updated_at","deleted_at","name","key","description") VALUES ($1,$2,$3,$4,$5,$6) ON CONFLICT ("id") DO UPDATE SET "updated_at"=$7,"deleted_at"="excluded"."deleted_at","name"="excluded"."name","key"="excluded"."key","description"="excluded"."description" RETURNING "id"`)).
-					WithArgs(AnyTime{}, AnyTime{}, Any{}, "name", "key", "description", AnyTime{}).
-					WillReturnRows(
-						sqlmock.NewRows([]string{"id", "name", "key", "description"}).
-							AddRow("1", "name", "key", "description"),
-					)
-				mock.
-					ExpectQuery(regexp.QuoteMeta(`INSERT INTO "technologies" ("created_at","updated_at","deleted_at","name","description","key","id") VALUES ($1,$2,$3,$4,$5,$6,$7) ON CONFLICT DO NOTHING RETURNING "id","id"`)).
-					WithArgs(AnyTime{}, AnyTime{}, Any{}, "tech name", "tech description", "techKey", "910f362e-4824-4c3d-a95d-e1d9e5f30f4a").
-					WillReturnRows(
-						sqlmock.NewRows([]string{"id", "name", "key", "description"}).
-							AddRow("910f362e-4824-4c3d-a95d-e1d9e5f30f4a", "tech name", "techKey", "tech description"),
-					)
-				mock.
-					ExpectQuery(regexp.QuoteMeta(`INSERT INTO "project_technologies" ("project_id","technology_id") VALUES ($1,$2) ON CONFLICT DO NOTHING RETURNING "technology_id"`)).
+					ExpectQuery(regexp.QuoteMeta(`INSERT INTO "project_technologies"`)).
 					WithArgs(1, "910f362e-4824-4c3d-a95d-e1d9e5f30f4a").
 					WillReturnRows(
 						sqlmock.NewRows([]string{"project_id", "technology_id"}).
 							AddRow("1", "910f362e-4824-4c3d-a95d-e1d9e5f30f4a"),
 					)
-
+				mock.
+					ExpectExec(regexp.QuoteMeta(`DELETE FROM "project_technologies"`)).
+					WithArgs(1, "910f362e-4824-4c3d-a95d-e1d9e5f30f4a").
+					WillReturnResult(
+						sqlmock.NewResult(1, 1),
+					)
 				mock.ExpectCommit()
 
 				// When
@@ -382,14 +384,21 @@ var _ = Describe("ProjectService", func() {
 
 				mock.ExpectBegin()
 				mock.
-					ExpectExec("SAVEPOINT").
+					ExpectQuery(regexp.QuoteMeta(`INSERT INTO "projects"`)).
+					WithArgs(AnyTime{}, AnyTime{}, Any{}, "", "", "").
+					WillReturnRows(
+						sqlmock.NewRows([]string{"id", "name", "key", "description"}).
+							AddRow("1", "", "", ""),
+					)
+				mock.
+					ExpectExec(regexp.QuoteMeta(`UPDATE "projects" SET`)).
+					WithArgs(AnyTime{}, AnyTime{}, "name", "key", "description", 1).
 					WillReturnResult(sqlmock.NewResult(1, 1))
 				mock.
-					ExpectQuery(`INSERT INTO "technologies"`).
+					ExpectQuery(regexp.QuoteMeta(`INSERT INTO "technologies"`)).
 					WithArgs(AnyTime{}, AnyTime{}, Any{}, "tech name", "tech description", "techKey", AnyTime{}).
 					WillReturnError(errors.New("failed to insert data"))
-				mock.ExpectExec("ROLLBACK TO SAVEPOINT").
-					WillReturnResult(sqlmock.NewResult(1, 1))
+				mock.ExpectRollback()
 
 				// When
 				project, err = projectService.UpsertProject(nil, projInput)

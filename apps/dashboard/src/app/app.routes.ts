@@ -4,11 +4,14 @@ import {
   WebComponentWrapperOptions,
 } from '@angular-architects/module-federation-tools'
 import { environment } from '../environments/environment'
+import { DashboardComponent } from './dashboard/dashboard.component'
+import { loadRemoteModule } from '@nrwl/angular/mf'
 
 export const AppRoutes: Routes = [
   {
     path: 'ops',
-    loadChildren: () => import('ops/Module').then((m) => m.RemoteEntryModule),
+    loadChildren: () =>
+      loadRemoteModule('ops', './Module').then((m) => m.RemoteEntryModule),
   },
   {
     path: 'sunnystream',
@@ -19,5 +22,13 @@ export const AppRoutes: Routes = [
       exposedModule: './Module',
       elementName: 'app-sunnystream',
     } as WebComponentWrapperOptions,
+  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+  },
+  {
+    path: '',
+    component: DashboardComponent,
   },
 ]

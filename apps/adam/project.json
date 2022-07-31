@@ -31,6 +31,12 @@
       "options": {
         "config": "gqlgen.yml"
       }
+    },
+    "docker": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "docker build -t coffeewithegg/adam -f apps/adam/Dockerfile ."
+      }
     }
   },
   "tags": []

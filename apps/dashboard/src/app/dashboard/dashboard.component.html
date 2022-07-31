@@ -1,0 +1,12 @@
+<div class="w-full h-full p-72">
+  <ul
+    class="grid mobile:grid-cols-3 tablet:grid-cols-3 desktop:grid-cols-5 bg-bg01"
+  >
+    <li *ngFor="let item of projects | keyvalue">
+      <coffeewithegg-project-overview
+        [project]="item.value"
+        [redirectPath]="item.key"
+      ></coffeewithegg-project-overview>
+    </li>
+  </ul>
+</div>

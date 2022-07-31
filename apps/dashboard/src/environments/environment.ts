@@ -4,6 +4,8 @@
 
 export const environment = {
   production: false,
+  backendServer: 'http://localhost:4001/graphql',
+  opsEntry: 'http://localhost:4201',
   sunnyStreamEntry: 'http://localhost:4202/remoteEntry.js',
 }
 

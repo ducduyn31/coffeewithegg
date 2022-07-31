@@ -1,6 +1,6 @@
 import { Component, Input, ViewEncapsulation } from '@angular/core'
-import { Project } from '../app.types'
 import { Router } from '@angular/router'
+import { Project } from '@coffeewithegg/data-access'
 
 @Component({
   selector: 'coffeewithegg-project-overview',
@@ -10,10 +10,12 @@ import { Router } from '@angular/router'
 })
 export class ProjectOverviewComponent {
   @Input() project!: Project
+  @Input() redirectPath!: string
 
   constructor(private router: Router) {}
 
   onClick() {
-    if (this.project.path) this.router.navigateByUrl(this.project.path)
+    if (this.project && this.redirectPath)
+      this.router.navigateByUrl(this.redirectPath)
   }
 }

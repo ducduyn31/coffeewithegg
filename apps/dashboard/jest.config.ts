@@ -12,6 +12,8 @@ export default {
   coverageDirectory: '../../coverage/apps/dashboard',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': 'jest-preset-angular',
+    '^.+\\.(css|scss|sass)$': 'jest-preview/transforms/css',
+    '^(?!.*\\.(js|mjs|cjs|ts|css|json)$)': 'jest-preview/transforms/file',
   },
   transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$)'],
   snapshotSerializers: [

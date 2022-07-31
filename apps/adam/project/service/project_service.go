@@ -10,7 +10,6 @@ import (
 	"github.com/labstack/gommon/log"
 	"github.com/thoas/go-funk"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 type ProjectService struct {
@@ -19,6 +18,10 @@ type ProjectService struct {
 }
 
 func (service *ProjectService) GetProjects(_ context.Context, filters *model.ProjectFilter) ([]*model.Project, error) {
+	if filters == nil {
+		filters = &model.ProjectFilter{}
+	}
+
 	// Offset Filter
 	var offset int
 	if filters.Offset == nil || *filters.Offset <= 0 {
@@ -62,7 +65,11 @@ func (service *ProjectService) UpsertProject(_ context.Context, input *model.Pro
 	// Update/Create the project
 	err = service.db.Transaction(func(tx *gorm.DB) error {
 		if project == nil {
-			project = &repository.Project{}
+			result := tx.Create(&project)
+
+			if result.RowsAffected == 0 {
+				return result.Error
+			}
 		}
 
 		if input.Key != nil {
@@ -78,19 +85,15 @@ func (service *ProjectService) UpsertProject(_ context.Context, input *model.Pro
 		}
 
 		if len(input.Technologies) > 0 {
-			technologies, err := service.techService.UpsertTechnologiesTransaction(tx, input.Technologies)
+			_, err := service.techService.UpsertTechnologiesForProjectTransaction(tx, input.Technologies, project)
 			if err != nil {
 				return err
 			}
-			project.Technologies = technologies
-		}
-
-		result := tx.Clauses(clause.OnConflict{
-			UpdateAll: true,
-		}).Create(&project)
-
-		if result.RowsAffected == 0 {
-			return result.Statement.Error
+		} else {
+			result := tx.Save(&project)
+			if result.RowsAffected == 0 {
+				return result.Error
+			}
 		}
 
 		return nil

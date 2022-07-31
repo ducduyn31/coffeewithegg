@@ -1,14 +1,17 @@
 <button class="container" (click)="onClick()">
   <cwe-card>
     <div class="subcontainer">
-      <div *ngIf="project?.technologyUsed?.length" class="technologies">
-        <span *ngFor="let tech of project.technologyUsed">
-          <cwe-icon [name]="tech"></cwe-icon>
+      <div
+        *ngIf="project && project.technologies && project.technologies.length"
+        class="technologies"
+      >
+        <span *ngFor="let tech of project.technologies">
+          <cwe-icon [name]="tech.key"></cwe-icon>
         </span>
       </div>
-      <div class="info text-center">
-        <p class="text-background text-h6">{{ project?.name }}</p>
-        <p class="text-grey01 text-ps">{{ project?.description }}</p>
+      <div *ngIf="project" class="info text-center">
+        <p class="text-background text-h6">{{ project.name }}</p>
+        <p class="text-grey01 text-ps">{{ project.description }}</p>
       </div>
     </div>
   </cwe-card>

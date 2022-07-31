@@ -4,9 +4,9 @@
   "projects": {
     "adam": "apps/adam",
     "common-angular": "packages/common-angular",
-    "common-angular-e2e": "apps/common-angular-e2e",
     "dashboard": "apps/dashboard",
     "dashboard-e2e": "apps/dashboard-e2e",
+    "data-access": "packages/data-access",
     "ops": "apps/ops",
     "ops-e2e": "apps/ops-e2e",
     "sunnystream": "apps/sunnystream",

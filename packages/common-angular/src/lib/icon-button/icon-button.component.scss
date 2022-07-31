@@ -1,0 +1,22 @@
+.default {
+  width: 32px;
+  height: 32px;
+  padding: 2px;
+  cursor: pointer;
+  border-radius: 8px;
+  background-color: rgba(34, 64, 205, 0.05);
+}
+
+.transparent {
+  width: 32px;
+  height: 32px;
+  padding: 2px;
+  background-color: rgba(0, 0, 0, 0);
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.transparent:hover {
+  background-color: rgba(34, 64, 205, 0.05);
+}
