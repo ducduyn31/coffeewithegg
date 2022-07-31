@@ -24,16 +24,16 @@ import (
 
 func init() {
 
-	viper.NewWithOptions(
-		viper.EnvKeyReplacer(strings.NewReplacer("_", ".")),
-	).AutomaticEnv()
+	viper.AutomaticEnv()
+	viper.SetEnvPrefix("CWE")
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
 	viper.SetConfigFile(`config.yml`)
 	viper.WatchConfig()
 
 	err := viper.ReadInConfig()
 	if err != nil {
-		panic(err)
+		log.Println("Cannot read config file, using ENV instead")
 	}
 	if viper.GetBool(`debug`) {
 		log.Println("Service RUN on DEBUG mode")
