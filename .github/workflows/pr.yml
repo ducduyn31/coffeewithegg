@@ -19,7 +19,7 @@ jobs:
         id: setSHAs
         uses: nrwl/nx-set-shas@v2
       - name: Install dependencies
-        run: yarn install
+        run: yarn install && go mod download
       - run: npx nx workspace-lint
       - run: npx nx affected --target=lint --parallel=3
       - name: Run platform tests
