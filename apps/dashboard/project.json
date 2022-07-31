@@ -134,5 +134,5 @@
     }
   },
   "tags": [],
-  "implicitDependencies": ["ops", "sunnystream", "adam"]
+  "implicitDependencies": ["ops", "sunnystream"]
 }
