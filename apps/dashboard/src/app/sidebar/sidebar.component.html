@@ -14,15 +14,15 @@
   >
     <li
       class="text-pl text-black whitespace-nowrap text-clip"
-      *ngFor="let project of projects"
+      *ngFor="let projectItem of projectsMapper | keyvalue"
     >
       <button
         class="flex gap-x-24 w-full h-[44px] hover:bg-primary hover:bg-opacity-5 hover:rounded-8 items-center"
         [ngClass]="expand ? 'p-6' : 'p-2 '"
-        (click)="onClick(project.key)"
+        (click)="onClick(projectItem.key)"
       >
-        <cwe-icon [name]="project.key"></cwe-icon>
-        <span *ngIf="expand">{{ project.name }}</span>
+        <cwe-icon [name]="projectItem.value.key"></cwe-icon>
+        <span *ngIf="expand">{{ projectItem.value.name }}</span>
       </button>
     </li>
   </ul>

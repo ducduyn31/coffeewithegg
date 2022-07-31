@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core'
-import { GetAllProjectsGQL, Project } from '@coffeewithegg/data-access'
+import { Project } from '@coffeewithegg/data-access'
 import { Router } from '@angular/router'
+import { ProjectService } from '../project.service'
 
 @Component({
   selector: 'coffeewithegg-sidebar',
@@ -9,13 +10,10 @@ import { Router } from '@angular/router'
   encapsulation: ViewEncapsulation.Emulated,
 })
 export class SidebarComponent implements OnInit {
-  projects: Project[] = []
+  projectsMapper: Map<string, Project> = new Map()
   expand = true
 
-  constructor(
-    private getAllProjects: GetAllProjectsGQL,
-    private router: Router,
-  ) {}
+  constructor(private projectService: ProjectService, private router: Router) {}
 
   onClick(target: string) {
     this.router.navigateByUrl(target)
@@ -26,8 +24,8 @@ export class SidebarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAllProjects.watch().valueChanges.subscribe((result) => {
-      this.projects = result.data.projects
+    this.projectService.getAllProjectsMappings().subscribe((result) => {
+      this.projectsMapper = result
     })
   }
 }
