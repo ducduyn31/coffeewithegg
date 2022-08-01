@@ -35,7 +35,7 @@
     "docker": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "docker build -t coffeewithegg/adam -f apps/adam/Dockerfile ."
+        "command": "nixpacks build . -i \"go mod download\" -b \"cd apps/adam && go build -o adam -modfile /app/go.mod\" -s \"./out\""
       }
     }
   },
