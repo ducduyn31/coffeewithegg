@@ -15,6 +15,7 @@
         "main": "apps/sunnystream/src/main.tsx",
         "polyfills": "apps/sunnystream/src/polyfills.ts",
         "tsConfig": "apps/sunnystream/tsconfig.app.json",
+        "postcssConfig": "apps/sunnystream/postcss.config.json",
         "assets": [
           "apps/sunnystream/src/favicon.ico",
           "apps/sunnystream/src/assets"

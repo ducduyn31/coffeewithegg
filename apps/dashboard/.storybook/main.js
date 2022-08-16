@@ -13,7 +13,7 @@ module.exports = {
   addons: [...rootMain.addons],
   staticDirs: [
     {
-      from: '../../../packages/common-angular/src/assets',
+      from: '../../../packages/base/assets',
       to: '/assets/common',
     },
   ],

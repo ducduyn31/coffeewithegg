@@ -1,14 +1,14 @@
 import styled from '@emotion/styled'
-import NxWelcome from './nx-welcome'
 
 const StyledApp = styled.div`
-  // Your style here
+  width: 100%;
+  height: 100%;
 `
 
 export function App() {
   return (
-    <StyledApp>
-      <NxWelcome title="sunnystream" />
+    <StyledApp className="bg-bg01">
+      <button className="bg-primary">Hello FUcker</button>
     </StyledApp>
   )
 }

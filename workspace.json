@@ -3,7 +3,9 @@
   "version": 2,
   "projects": {
     "adam": "apps/adam",
+    "base": "packages/base",
     "common-angular": "packages/common-angular",
+    "common-react": "packages/common-react",
     "dashboard": "apps/dashboard",
     "dashboard-e2e": "apps/dashboard-e2e",
     "data-access": "packages/data-access",

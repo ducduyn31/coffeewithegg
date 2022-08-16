@@ -15,7 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@coffeewithegg/base": ["packages/base/src/index.ts"],
       "@coffeewithegg/common-angular": ["packages/common-angular/src/index.ts"],
+      "@coffeewithegg/common-react": ["packages/common-react/src/index.ts"],
       "@coffeewithegg/data-access": ["packages/data-access/src/index.ts"]
     }
   },
