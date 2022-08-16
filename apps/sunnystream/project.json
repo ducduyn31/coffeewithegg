@@ -21,15 +21,15 @@
           "apps/sunnystream/src/assets"
         ],
         "styles": [],
-        "scripts": [],
-        "webpackConfig": "apps/sunnystream/webpack.config.js"
+        "scripts": []
       },
       "configurations": {
         "development": {
           "extractLicenses": false,
           "optimization": false,
           "sourceMap": true,
-          "vendorChunk": true
+          "vendorChunk": true,
+          "webpackConfig": "apps/sunnystream/webpack.config.js"
         },
         "production": {
           "fileReplacements": [
@@ -43,7 +43,8 @@
           "sourceMap": false,
           "namedChunks": false,
           "extractLicenses": true,
-          "vendorChunk": false
+          "vendorChunk": false,
+          "webpackConfig": "apps/sunnystream/webpack.prod.config.js"
         }
       }
     },
@@ -54,7 +55,8 @@
         "port": 4202,
         "publicHost": "http://localhost:4202",
         "buildTarget": "sunnystream:build",
-        "hmr": true
+        "hmr": true,
+        "isServe": true
       },
       "configurations": {
         "development": {

@@ -8,7 +8,7 @@ const StyledApp = styled.div`
 export function App() {
   return (
     <StyledApp className="bg-bg01">
-      <button className="bg-primary">Hello FUcker</button>
+      <button className="w-72">Hello Oh :)) </button>
     </StyledApp>
   )
 }
