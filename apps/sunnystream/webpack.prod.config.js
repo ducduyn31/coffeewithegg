@@ -3,7 +3,6 @@ const { ModuleFederationPlugin } = require('webpack').container
 const moduleFederationConfig = require('./module-federation.config')
 
 module.exports = (config) => {
-  console.log(config)
   return merge(config, {
     target: ['web', 'es2015'],
     output: {
