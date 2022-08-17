@@ -1,6 +1,6 @@
 import React from 'react'
 import { ComponentStory, ComponentMeta } from '@storybook/react'
-import Button from "./index";
+import Button from './index'
 
 export default {
   component: Button,
@@ -14,7 +14,7 @@ export default {
       options: ['small', 'medium', 'large'],
       control: 'radio',
     },
-  }
+  },
 } as ComponentMeta<typeof Button>
 
 const Template: ComponentStory<typeof Button> = (args) => (

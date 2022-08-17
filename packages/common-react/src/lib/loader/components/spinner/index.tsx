@@ -1,21 +1,21 @@
-import React from "react";
-import Icon from "../../../icon";
-import styled from "@emotion/styled";
+import React from 'react'
+import Icon from '../../../icon'
+import styled from '@emotion/styled'
 
-type SpinnerType = "default" | "button"
+type SpinnerType = 'default' | 'button'
 
 export interface SpinnerProps {
-  variant?: SpinnerType;
+  variant?: SpinnerType
 }
 
 const variantStyles: Record<SpinnerType, string> = {
-  default: "relative h-screen w-screen bg-bg01",
-  button: "w-full",
-};
+  default: 'relative h-screen w-screen bg-bg01',
+  button: 'w-full',
+}
 
-const SpinnerContainer = styled.div``;
+const SpinnerContainer = styled.div``
 
-const Spinner: React.FC<SpinnerProps> = ({ variant = "default", ...props }) => (
+const Spinner: React.FC<SpinnerProps> = ({ variant = 'default', ...props }) => (
   <SpinnerContainer className={variantStyles[variant]} {...props}>
     <Icon
       name="spinner"
@@ -23,6 +23,6 @@ const Spinner: React.FC<SpinnerProps> = ({ variant = "default", ...props }) => (
       className="absolute animate-spin inset-0 m-auto"
     />
   </SpinnerContainer>
-);
+)
 
-export default Spinner;
+export default Spinner
