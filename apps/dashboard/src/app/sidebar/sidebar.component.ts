@@ -11,7 +11,7 @@ import { ProjectService } from '../project.service'
 })
 export class SidebarComponent implements OnInit {
   projectsMapper: Map<string, Project> = new Map()
-  expand = true
+  expand = false
 
   constructor(private projectService: ProjectService, private router: Router) {}
 

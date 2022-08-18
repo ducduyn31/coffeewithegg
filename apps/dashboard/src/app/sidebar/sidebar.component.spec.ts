@@ -63,8 +63,8 @@ describe('SidebarComponent', () => {
     const toggler = fixture.nativeElement
       .querySelector('cwe-icon-button')
       .querySelector('button')
-    expect(component.expand).toEqual(true)
-    toggler.click()
     expect(component.expand).toEqual(false)
+    toggler.click()
+    expect(component.expand).toEqual(true)
   })
 })

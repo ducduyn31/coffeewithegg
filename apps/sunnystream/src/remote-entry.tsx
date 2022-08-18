@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './app/app'
+import Index from './app'
 
 class MfeSunnyStream extends HTMLElement {
   connectedCallback() {
-    ReactDOM.render(<App />, this)
+    ReactDOM.render(<Index />, this)
   }
 }
 

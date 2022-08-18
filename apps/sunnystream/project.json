@@ -15,20 +15,21 @@
         "main": "apps/sunnystream/src/main.tsx",
         "polyfills": "apps/sunnystream/src/polyfills.ts",
         "tsConfig": "apps/sunnystream/tsconfig.app.json",
+        "postcssConfig": "apps/sunnystream/postcss.config.json",
         "assets": [
           "apps/sunnystream/src/favicon.ico",
           "apps/sunnystream/src/assets"
         ],
         "styles": [],
-        "scripts": [],
-        "webpackConfig": "apps/sunnystream/webpack.config.js"
+        "scripts": []
       },
       "configurations": {
         "development": {
           "extractLicenses": false,
           "optimization": false,
           "sourceMap": true,
-          "vendorChunk": true
+          "vendorChunk": true,
+          "webpackConfig": "apps/sunnystream/webpack.config.js"
         },
         "production": {
           "fileReplacements": [
@@ -42,7 +43,8 @@
           "sourceMap": false,
           "namedChunks": false,
           "extractLicenses": true,
-          "vendorChunk": false
+          "vendorChunk": false,
+          "webpackConfig": "apps/sunnystream/webpack.prod.config.js"
         }
       }
     },
@@ -53,7 +55,8 @@
         "port": 4202,
         "publicHost": "http://localhost:4202",
         "buildTarget": "sunnystream:build",
-        "hmr": true
+        "hmr": true,
+        "isServe": true
       },
       "configurations": {
         "development": {

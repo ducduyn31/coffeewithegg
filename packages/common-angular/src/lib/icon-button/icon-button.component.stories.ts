@@ -1,6 +1,6 @@
 import { Meta, moduleMetadata, Story } from '@storybook/angular'
+import { icons } from '@coffeewithegg/base'
 import { IconButtonComponent } from './icon-button.component'
-import icons from '../icon/icon.list'
 import { IconComponent } from '../icon/icon.component'
 
 export default {

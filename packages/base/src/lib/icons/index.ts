@@ -6,4 +6,5 @@ export default [
   'ops',
   'react',
   'sunnystream',
+  'spinner',
 ]
