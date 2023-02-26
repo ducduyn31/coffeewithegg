@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/fsnotify/fsnotify"
+	"github.com/go-redis/redis/v8"
 	"github.com/golobby/container/v3"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -52,6 +53,11 @@ func init() {
 	viper.SetDefault(`database.location`, `Asia/Ho_Chi_Minh`)
 	viper.SetDefault(`database.slow-threshold`, 1)
 	viper.SetDefault(`database.show-sql`, false)
+
+	viper.SetDefault(`cache.host`, `localhost`)
+	viper.SetDefault(`cache.port`, `6379`)
+	viper.SetDefault(`cache.pass`, "password")
+	viper.SetDefault(`cache.db`, 0)
 }
 
 func initializeDB() *gorm.DB {
@@ -96,6 +102,28 @@ func initializeDB() *gorm.DB {
 	return db
 }
 
+func initializeCache() *redis.Client {
+	host := viper.GetString(`cache.host`)
+	port := viper.GetString(`cache.port`)
+	password := viper.GetString(`cache.pass`)
+	db := viper.GetInt(`cache.db`)
+
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%s", host, port),
+		Password: password,
+		DB:       db,
+	})
+
+	err := container.Singleton(func() *redis.Client {
+		return rdb
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return rdb
+}
+
 func startServer() {
 	e := echo.New()
 
@@ -136,6 +164,7 @@ func migrate(db *gorm.DB) {
 
 func main() {
 	db := initializeDB()
+	initializeCache()
 	migrate(db)
 
 	err := service.InitServicesContainer()

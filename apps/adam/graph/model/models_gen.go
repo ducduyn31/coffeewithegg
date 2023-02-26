@@ -2,6 +2,12 @@
 
 package model
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+)
+
 type File interface {
 	IsFile()
 }
@@ -9,6 +15,11 @@ type File interface {
 type BasePaginationFilter struct {
 	Count  *int `json:"count"`
 	Offset *int `json:"offset"`
+}
+
+type DeploymentPlanInput struct {
+	JSONSerialize *string `json:"jsonSerialize"`
+	ExternalLink  *string `json:"externalLink"`
 }
 
 type DocumentReadable struct {
@@ -33,6 +44,14 @@ type FileLink struct {
 
 func (FileLink) IsFile() {}
 
+type Infrastructure struct {
+	Project  *Project       `json:"project"`
+	Platform *string        `json:"platform"`
+	Status   *ServiceStatus `json:"status"`
+	UpStatus *bool          `json:"upStatus"`
+	UpTime   *int           `json:"upTime"`
+}
+
 type Project struct {
 	ID           string        `json:"id"`
 	Key          string        `json:"key"`
@@ -56,6 +75,10 @@ type ProjectInput struct {
 	Technologies []*TechnologyInput `json:"technologies"`
 }
 
+type RequestServiceInput struct {
+	Name *string `json:"name"`
+}
+
 type Technology struct {
 	ID          string  `json:"id"`
 	Key         string  `json:"key"`
@@ -68,4 +91,52 @@ type TechnologyInput struct {
 	Key         *string `json:"key"`
 	Name        *string `json:"name"`
 	Description *string `json:"description"`
+}
+
+type UploadDeploymentPlanInput struct {
+	Project *ProjectFilter       `json:"project"`
+	Plan    *DeploymentPlanInput `json:"plan"`
+}
+
+type ServiceStatus string
+
+const (
+	ServiceStatusCreated ServiceStatus = "CREATED"
+	ServiceStatusExhaust ServiceStatus = "EXHAUST"
+	ServiceStatusDown    ServiceStatus = "DOWN"
+)
+
+var AllServiceStatus = []ServiceStatus{
+	ServiceStatusCreated,
+	ServiceStatusExhaust,
+	ServiceStatusDown,
+}
+
+func (e ServiceStatus) IsValid() bool {
+	switch e {
+	case ServiceStatusCreated, ServiceStatusExhaust, ServiceStatusDown:
+		return true
+	}
+	return false
+}
+
+func (e ServiceStatus) String() string {
+	return string(e)
+}
+
+func (e *ServiceStatus) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ServiceStatus(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ServiceStatus", str)
+	}
+	return nil
+}
+
+func (e ServiceStatus) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

@@ -1,0 +1,36 @@
+extend type Mutation {
+  requestService(input: RequestServiceInput): Infrastructure
+  uploadDeploymentPlan(input: UploadDeploymentPlanInput): Infrastructure
+}
+
+extend type Query {
+  services: [Infrastructure]
+}
+
+enum ServiceStatus {
+  CREATED
+  EXHAUST
+  DOWN
+}
+
+input RequestServiceInput {
+  name: String
+}
+
+input UploadDeploymentPlanInput {
+  project: ProjectFilter
+  plan: DeploymentPlanInput
+}
+
+input DeploymentPlanInput {
+  jsonSerialize: String
+  externalLink: String
+}
+
+type Infrastructure {
+  project: Project
+  platform: String
+  status: ServiceStatus
+  upStatus: Boolean
+  upTime: Int
+}

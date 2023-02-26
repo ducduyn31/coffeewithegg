@@ -62,8 +62,18 @@ type ComplexityRoot struct {
 		Name        func(childComplexity int) int
 	}
 
+	Infrastructure struct {
+		Platform func(childComplexity int) int
+		Project  func(childComplexity int) int
+		Status   func(childComplexity int) int
+		UpStatus func(childComplexity int) int
+		UpTime   func(childComplexity int) int
+	}
+
 	Mutation struct {
-		UpsertProject func(childComplexity int, input *model.ProjectInput) int
+		RequestService       func(childComplexity int, input *model.RequestServiceInput) int
+		UploadDeploymentPlan func(childComplexity int, input *model.UploadDeploymentPlanInput) int
+		UpsertProject        func(childComplexity int, input *model.ProjectInput) int
 	}
 
 	Project struct {
@@ -76,6 +86,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		Projects func(childComplexity int, filters *model.ProjectFilter) int
+		Services func(childComplexity int) int
 	}
 
 	Technology struct {
@@ -88,9 +99,12 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	UpsertProject(ctx context.Context, input *model.ProjectInput) (*model.Project, error)
+	RequestService(ctx context.Context, input *model.RequestServiceInput) (*model.Infrastructure, error)
+	UploadDeploymentPlan(ctx context.Context, input *model.UploadDeploymentPlanInput) (*model.Infrastructure, error)
 }
 type QueryResolver interface {
 	Projects(ctx context.Context, filters *model.ProjectFilter) ([]*model.Project, error)
+	Services(ctx context.Context) ([]*model.Infrastructure, error)
 }
 
 type executableSchema struct {
@@ -192,6 +206,65 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.FileLink.Name(childComplexity), true
 
+	case "Infrastructure.platform":
+		if e.complexity.Infrastructure.Platform == nil {
+			break
+		}
+
+		return e.complexity.Infrastructure.Platform(childComplexity), true
+
+	case "Infrastructure.project":
+		if e.complexity.Infrastructure.Project == nil {
+			break
+		}
+
+		return e.complexity.Infrastructure.Project(childComplexity), true
+
+	case "Infrastructure.status":
+		if e.complexity.Infrastructure.Status == nil {
+			break
+		}
+
+		return e.complexity.Infrastructure.Status(childComplexity), true
+
+	case "Infrastructure.upStatus":
+		if e.complexity.Infrastructure.UpStatus == nil {
+			break
+		}
+
+		return e.complexity.Infrastructure.UpStatus(childComplexity), true
+
+	case "Infrastructure.upTime":
+		if e.complexity.Infrastructure.UpTime == nil {
+			break
+		}
+
+		return e.complexity.Infrastructure.UpTime(childComplexity), true
+
+	case "Mutation.requestService":
+		if e.complexity.Mutation.RequestService == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_requestService_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RequestService(childComplexity, args["input"].(*model.RequestServiceInput)), true
+
+	case "Mutation.uploadDeploymentPlan":
+		if e.complexity.Mutation.UploadDeploymentPlan == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_uploadDeploymentPlan_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UploadDeploymentPlan(childComplexity, args["input"].(*model.UploadDeploymentPlanInput)), true
+
 	case "Mutation.upsertProject":
 		if e.complexity.Mutation.UpsertProject == nil {
 			break
@@ -251,6 +324,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Projects(childComplexity, args["filters"].(*model.ProjectFilter)), true
 
+	case "Query.services":
+		if e.complexity.Query.Services == nil {
+			break
+		}
+
+		return e.complexity.Query.Services(childComplexity), true
+
 	case "Technology.description":
 		if e.complexity.Technology.Description == nil {
 			break
@@ -288,9 +368,12 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	ec := executionContext{rc, e}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputBasePaginationFilter,
+		ec.unmarshalInputDeploymentPlanInput,
 		ec.unmarshalInputProjectFilter,
 		ec.unmarshalInputProjectInput,
+		ec.unmarshalInputRequestServiceInput,
 		ec.unmarshalInputTechnologyInput,
+		ec.unmarshalInputUploadDeploymentPlanInput,
 	)
 	first := true
 
@@ -381,6 +464,43 @@ type DocumentReadable implements File {
   offset: Int
 }
 `, BuiltIn: false},
+	{Name: "../../infrastructure/delivery/graph/infrastructure.graphql", Input: `extend type Mutation {
+  requestService(input: RequestServiceInput): Infrastructure
+  uploadDeploymentPlan(input: UploadDeploymentPlanInput): Infrastructure
+}
+
+extend type Query {
+  services: [Infrastructure]
+}
+
+enum ServiceStatus {
+  CREATED
+  EXHAUST
+  DOWN
+}
+
+input RequestServiceInput {
+  name: String
+}
+
+input UploadDeploymentPlanInput {
+  project: ProjectFilter
+  plan: DeploymentPlanInput
+}
+
+input DeploymentPlanInput {
+  jsonSerialize: String
+  externalLink: String
+}
+
+type Infrastructure {
+  project: Project
+  platform: String
+  status: ServiceStatus
+  upStatus: Boolean
+  upTime: Int
+}
+`, BuiltIn: false},
 	{Name: "../../project/delivery/graph/project.graphql", Input: `type Mutation {
   upsertProject(input: ProjectInput): Project
 }
@@ -434,6 +554,36 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 // endregion ************************** generated!.gotpl **************************
 
 // region    ***************************** args.gotpl *****************************
+
+func (ec *executionContext) field_Mutation_requestService_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.RequestServiceInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalORequestServiceInput2ᚖcoffeewitheggᚋappsᚋadamᚋgraphᚋmodelᚐRequestServiceInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_uploadDeploymentPlan_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.UploadDeploymentPlanInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalOUploadDeploymentPlanInput2ᚖcoffeewitheggᚋappsᚋadamᚋgraphᚋmodelᚐUploadDeploymentPlanInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
 
 func (ec *executionContext) field_Mutation_upsertProject_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
@@ -1025,6 +1175,223 @@ func (ec *executionContext) fieldContext_FileLink_link(ctx context.Context, fiel
 	return fc, nil
 }
 
+func (ec *executionContext) _Infrastructure_project(ctx context.Context, field graphql.CollectedField, obj *model.Infrastructure) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Infrastructure_project(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Project, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Project)
+	fc.Result = res
+	return ec.marshalOProject2ᚖcoffeewitheggᚋappsᚋadamᚋgraphᚋmodelᚐProject(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Infrastructure_project(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Infrastructure",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Project_id(ctx, field)
+			case "key":
+				return ec.fieldContext_Project_key(ctx, field)
+			case "name":
+				return ec.fieldContext_Project_name(ctx, field)
+			case "description":
+				return ec.fieldContext_Project_description(ctx, field)
+			case "technologies":
+				return ec.fieldContext_Project_technologies(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Project", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Infrastructure_platform(ctx context.Context, field graphql.CollectedField, obj *model.Infrastructure) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Infrastructure_platform(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Platform, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Infrastructure_platform(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Infrastructure",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Infrastructure_status(ctx context.Context, field graphql.CollectedField, obj *model.Infrastructure) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Infrastructure_status(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.ServiceStatus)
+	fc.Result = res
+	return ec.marshalOServiceStatus2ᚖcoffeewitheggᚋappsᚋadamᚋgraphᚋmodelᚐServiceStatus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Infrastructure_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Infrastructure",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ServiceStatus does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Infrastructure_upStatus(ctx context.Context, field graphql.CollectedField, obj *model.Infrastructure) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Infrastructure_upStatus(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpStatus, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Infrastructure_upStatus(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Infrastructure",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Infrastructure_upTime(ctx context.Context, field graphql.CollectedField, obj *model.Infrastructure) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Infrastructure_upTime(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.UpTime, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*int)
+	fc.Result = res
+	return ec.marshalOInt2ᚖint(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Infrastructure_upTime(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Infrastructure",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_upsertProject(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_upsertProject(ctx, field)
 	if err != nil {
@@ -1083,6 +1450,134 @@ func (ec *executionContext) fieldContext_Mutation_upsertProject(ctx context.Cont
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_upsertProject_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_requestService(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_requestService(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RequestService(rctx, fc.Args["input"].(*model.RequestServiceInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Infrastructure)
+	fc.Result = res
+	return ec.marshalOInfrastructure2ᚖcoffeewitheggᚋappsᚋadamᚋgraphᚋmodelᚐInfrastructure(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_requestService(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "project":
+				return ec.fieldContext_Infrastructure_project(ctx, field)
+			case "platform":
+				return ec.fieldContext_Infrastructure_platform(ctx, field)
+			case "status":
+				return ec.fieldContext_Infrastructure_status(ctx, field)
+			case "upStatus":
+				return ec.fieldContext_Infrastructure_upStatus(ctx, field)
+			case "upTime":
+				return ec.fieldContext_Infrastructure_upTime(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Infrastructure", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_requestService_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_uploadDeploymentPlan(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_uploadDeploymentPlan(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UploadDeploymentPlan(rctx, fc.Args["input"].(*model.UploadDeploymentPlanInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Infrastructure)
+	fc.Result = res
+	return ec.marshalOInfrastructure2ᚖcoffeewitheggᚋappsᚋadamᚋgraphᚋmodelᚐInfrastructure(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_uploadDeploymentPlan(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "project":
+				return ec.fieldContext_Infrastructure_project(ctx, field)
+			case "platform":
+				return ec.fieldContext_Infrastructure_platform(ctx, field)
+			case "status":
+				return ec.fieldContext_Infrastructure_status(ctx, field)
+			case "upStatus":
+				return ec.fieldContext_Infrastructure_upStatus(ctx, field)
+			case "upTime":
+				return ec.fieldContext_Infrastructure_upTime(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Infrastructure", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_uploadDeploymentPlan_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -1376,6 +1871,59 @@ func (ec *executionContext) fieldContext_Query_projects(ctx context.Context, fie
 	if fc.Args, err = ec.field_Query_projects_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_services(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_services(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Services(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.Infrastructure)
+	fc.Result = res
+	return ec.marshalOInfrastructure2ᚕᚖcoffeewitheggᚋappsᚋadamᚋgraphᚋmodelᚐInfrastructure(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_services(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "project":
+				return ec.fieldContext_Infrastructure_project(ctx, field)
+			case "platform":
+				return ec.fieldContext_Infrastructure_platform(ctx, field)
+			case "status":
+				return ec.fieldContext_Infrastructure_status(ctx, field)
+			case "upStatus":
+				return ec.fieldContext_Infrastructure_upStatus(ctx, field)
+			case "upTime":
+				return ec.fieldContext_Infrastructure_upTime(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Infrastructure", field.Name)
+		},
 	}
 	return fc, nil
 }
@@ -3491,6 +4039,42 @@ func (ec *executionContext) unmarshalInputBasePaginationFilter(ctx context.Conte
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputDeploymentPlanInput(ctx context.Context, obj interface{}) (model.DeploymentPlanInput, error) {
+	var it model.DeploymentPlanInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"jsonSerialize", "externalLink"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "jsonSerialize":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("jsonSerialize"))
+			it.JSONSerialize, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "externalLink":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("externalLink"))
+			it.ExternalLink, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputProjectFilter(ctx context.Context, obj interface{}) (model.ProjectFilter, error) {
 	var it model.ProjectFilter
 	asMap := map[string]interface{}{}
@@ -3603,6 +4187,34 @@ func (ec *executionContext) unmarshalInputProjectInput(ctx context.Context, obj 
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputRequestServiceInput(ctx context.Context, obj interface{}) (model.RequestServiceInput, error) {
+	var it model.RequestServiceInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"name"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputTechnologyInput(ctx context.Context, obj interface{}) (model.TechnologyInput, error) {
 	var it model.TechnologyInput
 	asMap := map[string]interface{}{}
@@ -3646,6 +4258,42 @@ func (ec *executionContext) unmarshalInputTechnologyInput(ctx context.Context, o
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
 			it.Description, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUploadDeploymentPlanInput(ctx context.Context, obj interface{}) (model.UploadDeploymentPlanInput, error) {
+	var it model.UploadDeploymentPlanInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"project", "plan"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "project":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("project"))
+			it.Project, err = ec.unmarshalOProjectFilter2ᚖcoffeewitheggᚋappsᚋadamᚋgraphᚋmodelᚐProjectFilter(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "plan":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plan"))
+			it.Plan, err = ec.unmarshalODeploymentPlanInput2ᚖcoffeewitheggᚋappsᚋadamᚋgraphᚋmodelᚐDeploymentPlanInput(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -3791,6 +4439,47 @@ func (ec *executionContext) _FileLink(ctx context.Context, sel ast.SelectionSet,
 	return out
 }
 
+var infrastructureImplementors = []string{"Infrastructure"}
+
+func (ec *executionContext) _Infrastructure(ctx context.Context, sel ast.SelectionSet, obj *model.Infrastructure) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, infrastructureImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Infrastructure")
+		case "project":
+
+			out.Values[i] = ec._Infrastructure_project(ctx, field, obj)
+
+		case "platform":
+
+			out.Values[i] = ec._Infrastructure_platform(ctx, field, obj)
+
+		case "status":
+
+			out.Values[i] = ec._Infrastructure_status(ctx, field, obj)
+
+		case "upStatus":
+
+			out.Values[i] = ec._Infrastructure_upStatus(ctx, field, obj)
+
+		case "upTime":
+
+			out.Values[i] = ec._Infrastructure_upTime(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var mutationImplementors = []string{"Mutation"}
 
 func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet) graphql.Marshaler {
@@ -3814,6 +4503,18 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_upsertProject(ctx, field)
+			})
+
+		case "requestService":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_requestService(ctx, field)
+			})
+
+		case "uploadDeploymentPlan":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_uploadDeploymentPlan(ctx, field)
 			})
 
 		default:
@@ -3909,6 +4610,26 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "services":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_services(ctx, field)
 				return res
 			}
 
@@ -4709,6 +5430,14 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
+func (ec *executionContext) unmarshalODeploymentPlanInput2ᚖcoffeewitheggᚋappsᚋadamᚋgraphᚋmodelᚐDeploymentPlanInput(ctx context.Context, v interface{}) (*model.DeploymentPlanInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputDeploymentPlanInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalOID2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
 	if v == nil {
 		return nil, nil
@@ -4723,6 +5452,54 @@ func (ec *executionContext) marshalOID2ᚖstring(ctx context.Context, sel ast.Se
 	}
 	res := graphql.MarshalID(*v)
 	return res
+}
+
+func (ec *executionContext) marshalOInfrastructure2ᚕᚖcoffeewitheggᚋappsᚋadamᚋgraphᚋmodelᚐInfrastructure(ctx context.Context, sel ast.SelectionSet, v []*model.Infrastructure) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOInfrastructure2ᚖcoffeewitheggᚋappsᚋadamᚋgraphᚋmodelᚐInfrastructure(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
+func (ec *executionContext) marshalOInfrastructure2ᚖcoffeewitheggᚋappsᚋadamᚋgraphᚋmodelᚐInfrastructure(ctx context.Context, sel ast.SelectionSet, v *model.Infrastructure) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Infrastructure(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOInt2ᚖint(ctx context.Context, v interface{}) (*int, error) {
@@ -4762,6 +5539,30 @@ func (ec *executionContext) unmarshalOProjectInput2ᚖcoffeewitheggᚋappsᚋada
 	}
 	res, err := ec.unmarshalInputProjectInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalORequestServiceInput2ᚖcoffeewitheggᚋappsᚋadamᚋgraphᚋmodelᚐRequestServiceInput(ctx context.Context, v interface{}) (*model.RequestServiceInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputRequestServiceInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalOServiceStatus2ᚖcoffeewitheggᚋappsᚋadamᚋgraphᚋmodelᚐServiceStatus(ctx context.Context, v interface{}) (*model.ServiceStatus, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.ServiceStatus)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOServiceStatus2ᚖcoffeewitheggᚋappsᚋadamᚋgraphᚋmodelᚐServiceStatus(ctx context.Context, sel ast.SelectionSet, v *model.ServiceStatus) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) unmarshalOString2ᚕᚖstring(ctx context.Context, v interface{}) ([]*string, error) {
@@ -4884,6 +5685,14 @@ func (ec *executionContext) unmarshalOTechnologyInput2ᚖcoffeewitheggᚋappsᚋ
 		return nil, nil
 	}
 	res, err := ec.unmarshalInputTechnologyInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalOUploadDeploymentPlanInput2ᚖcoffeewitheggᚋappsᚋadamᚋgraphᚋmodelᚐUploadDeploymentPlanInput(ctx context.Context, v interface{}) (*model.UploadDeploymentPlanInput, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := ec.unmarshalInputUploadDeploymentPlanInput(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
 

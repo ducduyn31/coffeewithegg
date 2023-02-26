@@ -1,4 +1,12 @@
 # Copy this file to config.yml
+server:
+  address: ":4001"
+
+  cors:
+    - "http://localhost:4200"
+    - "http://localhost:4201"
+    - "http://localhost:4202"
+
 database:
   host: "your db host"
   port: "your db port"
