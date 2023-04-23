@@ -72,6 +72,8 @@ func initConfig() {
 
 	viper.SetDefault(`service-worker.count`, 10)
 	viper.SetDefault(`service-worker.interval`, 1000)
+	viper.SetDefault(`service-worker.timeout`, 30000)
+	viper.SetDefault(`service-worker.max-count`, 100)
 }
 
 func initializeDB() *gorm.DB {

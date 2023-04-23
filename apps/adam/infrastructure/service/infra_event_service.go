@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/go-redis/redis/v8"
 	"github.com/golobby/container/v3"
+	"github.com/google/uuid"
 	"github.com/labstack/gommon/log"
 	"sync"
 	"time"
@@ -65,8 +66,9 @@ func (service *InfrastructureEventManager) SendBootRequest(serviceKey string) er
 
 func (service *InfrastructureEventManager) generateEventMessage(eventType string, serviceName string) EventMessage {
 	return EventMessage{
-		eventType,
-		serviceName,
+		EventType:   eventType,
+		ServiceName: serviceName,
+		Id:          uuid.New(),
 	}
 }
 
@@ -83,10 +85,24 @@ func (service *InfrastructureEventManager) StartServiceWorkers(workersCount int)
 }
 
 type EventMessage struct {
-	EventType   string `json:"event_type"`
-	ServiceName string `json:"service_name"`
+	Id          uuid.UUID `json:"id"`
+	EventType   string    `json:"event_type"`
+	ServiceName string    `json:"service_name"`
 }
 
 func (e EventMessage) MarshalBinary() ([]byte, error) {
 	return json.Marshal(e)
+}
+
+func convertToEventMessages(data []redis.Z) (map[EventMessage]int64, error) {
+	var result = make(map[EventMessage]int64)
+	for _, d := range data {
+		var ev EventMessage
+		err := json.Unmarshal([]byte(d.Member.(string)), &ev)
+		if err != nil {
+			return nil, err
+		}
+		result[ev] = int64(d.Score)
+	}
+	return result, nil
 }
