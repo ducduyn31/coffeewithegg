@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  adam:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: adam
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - 4001:4001
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:13.2
+    container_name: adam-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: adam
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  redis:
+    image: redis:6.0.9
+    container_name: adam-redis
+    ports:
+      - 6379:6379
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    environment:
+      REDIS_PASSWORD: password

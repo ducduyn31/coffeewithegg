@@ -3,6 +3,8 @@ package service
 import (
 	"coffeewithegg/apps/adam/graph/model"
 	"coffeewithegg/apps/adam/project/repository"
+	"errors"
+	"fmt"
 	"github.com/golobby/container/v3"
 	"github.com/labstack/gommon/log"
 	"github.com/thoas/go-funk"
@@ -12,6 +14,26 @@ import (
 
 type TechnologyService struct {
 	db *gorm.DB
+}
+
+func (service *TechnologyService) GetServiceName() string {
+	return "TechnologyService"
+}
+
+func (service *TechnologyService) InitServiceInstance() error {
+	var db *gorm.DB
+	err := container.Resolve(&db)
+	if err != nil {
+		return errors.New(fmt.Sprintf("DB is not initialized: %s", err.Error()))
+	}
+
+	service.db = db
+	return nil
+}
+
+func (service *TechnologyService) DeleteServiceInstance() error {
+	log.Info("Removing TechnologyService instance")
+	return nil
 }
 
 func (service *TechnologyService) UpsertTechnologiesForProjectTransaction(tx *gorm.DB, input []*model.TechnologyInput, project *repository.Project) ([]repository.Technology, error) {
@@ -28,16 +50,4 @@ func (service *TechnologyService) UpsertTechnologiesForProjectTransaction(tx *go
 	}
 
 	return funk.Map(technologies, copyTechnologyDBO).([]repository.Technology), nil
-}
-
-func NewTechnologyService() *TechnologyService {
-	var db *gorm.DB
-	err := container.Resolve(&db)
-	if err != nil {
-		log.Fatal("DB is not initialized")
-		return nil
-	}
-	return &TechnologyService{
-		db: db,
-	}
 }

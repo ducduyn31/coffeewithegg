@@ -7,15 +7,14 @@ import (
 	"coffeewithegg/apps/adam/graph/generated"
 	"coffeewithegg/apps/adam/graph/model"
 	"coffeewithegg/apps/adam/project/service"
+	"coffeewithegg/apps/adam/utils"
 	"context"
-
-	container "github.com/golobby/container/v3"
 )
 
 // UpsertProject is the resolver for the upsertProject field.
 func (r *mutationResolver) UpsertProject(ctx context.Context, input *model.ProjectInput) (*model.Project, error) {
 	var projectService *service.ProjectService
-	err := container.Resolve(&projectService)
+	err := utils.ResolveService(projectService.GetServiceName(), &projectService)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +24,7 @@ func (r *mutationResolver) UpsertProject(ctx context.Context, input *model.Proje
 // Projects is the resolver for the projects field.
 func (r *queryResolver) Projects(ctx context.Context, filters *model.ProjectFilter) ([]*model.Project, error) {
 	var projectService *service.ProjectService
-	err := container.Resolve(&projectService)
+	err := utils.ResolveService(projectService.GetServiceName(), &projectService)
 	if err != nil {
 		return nil, err
 	}

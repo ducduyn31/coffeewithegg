@@ -3,34 +3,33 @@ package service
 import (
 	infraService "coffeewithegg/apps/adam/infrastructure/service"
 	projectService "coffeewithegg/apps/adam/project/service"
-	"github.com/golobby/container/v3"
+	"coffeewithegg/apps/adam/utils"
 )
 
-func InitServicesContainer() error {
-	var err error
+type ServiceMap struct {
+	services map[string]*utils.ServiceModule
+}
+
+func (serviceMap *ServiceMap) registerService(service utils.ServiceModule) {
+	serviceMap.services[service.GetServiceName()] = &service
+	utils.RegisterNewService(service)
+}
+
+var serviceMapInstance = &ServiceMap{
+	services: make(map[string]*utils.ServiceModule),
+}
+
+func GetServiceMap() *map[string]*utils.ServiceModule {
+	return &serviceMapInstance.services
+}
+
+func InitServicesContainer() {
 
 	// Project Modules
-	err = container.Singleton(func() *projectService.TechnologyService {
-		return projectService.NewTechnologyService()
-	})
-	if err != nil {
-		return err
-	}
-
-	err = container.Singleton(func() *projectService.ProjectService {
-		return projectService.NewProjectService()
-	})
-	if err != nil {
-		return err
-	}
+	serviceMapInstance.registerService(&projectService.ProjectService{})
+	serviceMapInstance.registerService(&projectService.TechnologyService{})
 
 	// Infra modules
-	err = container.Singleton(func() *infraService.InfrastructureService {
-		return infraService.NewInfrastructureService()
-	})
-	if err != nil {
-		return err
-	}
-
-	return nil
+	serviceMapInstance.registerService(&infraService.InfrastructureService{})
+	serviceMapInstance.registerService(&infraService.InfrastructureEventManager{})
 }

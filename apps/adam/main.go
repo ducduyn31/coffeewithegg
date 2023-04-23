@@ -4,7 +4,10 @@ import (
 	"coffeewithegg/apps/adam/app/service"
 	"coffeewithegg/apps/adam/graph"
 	"coffeewithegg/apps/adam/graph/generated"
+	infraEventService "coffeewithegg/apps/adam/infrastructure/service"
 	"coffeewithegg/apps/adam/migrations"
+	"coffeewithegg/apps/adam/shutdown"
+	"coffeewithegg/apps/adam/utils"
 	"fmt"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/fsnotify/fsnotify"
@@ -24,7 +27,15 @@ import (
 )
 
 func init() {
+	initConfig()
+	db := initializeDB()
+	initializeCache()
+	migrate(db)
+	shutdown.InitGracefulShutdown()
+	service.InitServicesContainer()
+}
 
+func initConfig() {
 	viper.AutomaticEnv()
 	viper.SetEnvPrefix("CWE")
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
@@ -58,6 +69,9 @@ func init() {
 	viper.SetDefault(`cache.port`, `6379`)
 	viper.SetDefault(`cache.pass`, "password")
 	viper.SetDefault(`cache.db`, 0)
+
+	viper.SetDefault(`service-worker.count`, 10)
+	viper.SetDefault(`service-worker.interval`, 1000)
 }
 
 func initializeDB() *gorm.DB {
@@ -124,7 +138,7 @@ func initializeCache() *redis.Client {
 	return rdb
 }
 
-func startServer() {
+func startServerAsync() *echo.Echo {
 	e := echo.New()
 
 	allowOrigins := viper.GetStringSlice("server.cors")
@@ -143,7 +157,21 @@ func startServer() {
 		return nil
 	})
 
-	log.Fatal(e.Start(viper.GetString("server.address")))
+	go func() {
+		log.Fatal(e.Start(viper.GetString("server.address")))
+	}()
+
+	return e
+}
+
+func startServiceWorkers() {
+	var eventManager *infraEventService.InfrastructureEventManager
+	err := utils.ResolveService(eventManager.GetServiceName(), &eventManager)
+	if err != nil {
+		log.Fatal("Failed to resolve event manager service", err)
+	}
+
+	eventManager.StartServiceWorkers(viper.GetInt(`service-worker.count`))
 }
 
 func migrate(db *gorm.DB) {
@@ -163,14 +191,16 @@ func migrate(db *gorm.DB) {
 }
 
 func main() {
-	db := initializeDB()
-	initializeCache()
-	migrate(db)
+	startServiceWorkers()
+	server := startServerAsync()
 
-	err := service.InitServicesContainer()
-	if err != nil {
-		log.Fatal(err)
+	// Tear down the service when we receive a termination signal
+	<-shutdown.MainContext().Done()
+	log.Println("Service is shutting down...")
+
+	// Loop through services map
+	for _, module := range *service.GetServiceMap() {
+		(*module).DeleteServiceInstance()
 	}
-
-	startServer()
+	server.Shutdown(shutdown.MainContext())
 }

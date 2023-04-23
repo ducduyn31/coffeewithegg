@@ -5,11 +5,12 @@ go 1.18
 require (
 	github.com/99designs/gqlgen v0.17.13
 	github.com/DATA-DOG/go-sqlmock v1.5.0
+	github.com/avast/retry-go v3.0.0+incompatible
 	github.com/fsnotify/fsnotify v1.5.4
 	github.com/go-redis/redis/v8 v8.11.5
-	github.com/golobby/container/v3 v3.2.1
+	github.com/golobby/container/v3 v3.3.2
 	github.com/google/uuid v1.1.2
-	github.com/labstack/echo/v4 v4.7.2
+	github.com/labstack/echo/v4 v4.9.0
 	github.com/labstack/gommon v0.3.1
 	github.com/onsi/ginkgo/v2 v2.1.4
 	github.com/onsi/gomega v1.20.0
@@ -54,8 +55,8 @@ require (
 	github.com/valyala/fasttemplate v1.2.1 // indirect
 	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4 // indirect
 	golang.org/x/net v0.0.0-20220520000938-2e3eb7b945c2 // indirect
-	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
-	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f // indirect
+	golang.org/x/text v0.3.8 // indirect
 	golang.org/x/time v0.0.0-20201208040808-7e3f01d25324 // indirect
 	gopkg.in/ini.v1 v1.66.4 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

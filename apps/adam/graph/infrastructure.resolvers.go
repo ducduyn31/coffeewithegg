@@ -6,16 +6,15 @@ package graph
 import (
 	"coffeewithegg/apps/adam/graph/model"
 	"coffeewithegg/apps/adam/infrastructure/service"
+	"coffeewithegg/apps/adam/utils"
 	"context"
 	"fmt"
-
-	container "github.com/golobby/container/v3"
 )
 
 // RequestService is the resolver for the requestService field.
 func (r *mutationResolver) RequestService(ctx context.Context, input *model.RequestServiceInput) (*model.Infrastructure, error) {
 	var infraService *service.InfrastructureService
-	err := container.Resolve(&infraService)
+	err := utils.ResolveService(infraService.GetServiceName(), &infraService)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +24,7 @@ func (r *mutationResolver) RequestService(ctx context.Context, input *model.Requ
 // UploadDeploymentPlan is the resolver for the uploadDeploymentPlan field.
 func (r *mutationResolver) UploadDeploymentPlan(ctx context.Context, input *model.UploadDeploymentPlanInput) (*model.Infrastructure, error) {
 	var infraService *service.InfrastructureService
-	err := container.Resolve(&infraService)
+	err := utils.ResolveService(infraService.GetServiceName(), &infraService)
 	if err != nil {
 		return nil, err
 	}

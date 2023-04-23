@@ -13,3 +13,6 @@ database:
   user: 'your db username'
   pass: 'your db password'
   name: 'your db name'
+
+service-worker:
+  count: 10

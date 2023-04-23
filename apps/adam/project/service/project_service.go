@@ -3,6 +3,7 @@ package service
 import (
 	"coffeewithegg/apps/adam/graph/model"
 	"coffeewithegg/apps/adam/project/repository"
+	"coffeewithegg/apps/adam/utils"
 	"context"
 	"errors"
 	"fmt"
@@ -15,6 +16,33 @@ import (
 type ProjectService struct {
 	db          *gorm.DB
 	techService *TechnologyService
+}
+
+func (service *ProjectService) GetServiceName() string {
+	return "ProjectService"
+}
+
+func (service *ProjectService) InitServiceInstance() error {
+	var db *gorm.DB
+	err := container.Resolve(&db)
+	if err != nil {
+		return errors.New(fmt.Sprintf("DB is not initialized: %s", err.Error()))
+	}
+
+	var techService *TechnologyService
+	err = utils.ResolveService(techService.GetServiceName(), &techService)
+	if err != nil {
+		return errors.New(fmt.Sprintf("TechnologyService is not initialized: %s", err.Error()))
+	}
+
+	service.db = db
+	service.techService = techService
+	return nil
+}
+
+func (service *ProjectService) DeleteServiceInstance() error {
+	log.Info("Removing ProjectService instance")
+	return nil
 }
 
 func (service *ProjectService) GetProjects(_ context.Context, filters *model.ProjectFilter) ([]*model.Project, error) {
@@ -103,25 +131,4 @@ func (service *ProjectService) UpsertProject(_ context.Context, input *model.Pro
 	}
 
 	return mapProjectDBOtoProject(project), nil
-}
-
-func NewProjectService() *ProjectService {
-	var db *gorm.DB
-	err := container.Resolve(&db)
-	if err != nil {
-		log.Fatal("DB is not initialized")
-		return nil
-	}
-
-	var techService *TechnologyService
-	err = container.Resolve(&techService)
-	if err != nil {
-		log.Fatal("TechnologyService is not initialized")
-		return nil
-	}
-
-	return &ProjectService{
-		db:          db,
-		techService: techService,
-	}
 }
