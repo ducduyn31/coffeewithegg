@@ -1,6 +1,7 @@
 package service
 
 import (
+	"coffeewithegg/apps/adam/infrastructure/core/sloky/events"
 	"encoding/json"
 	"github.com/go-redis/redis/v8"
 	"github.com/golobby/container/v3"
@@ -12,6 +13,7 @@ import (
 
 type InfrastructureEventManager struct {
 	rdb                *redis.Client
+	core               events.EventManager
 	evQueueName        string
 	schedulerWaitGroup *sync.WaitGroup
 }
@@ -29,6 +31,7 @@ func (service *InfrastructureEventManager) InitServiceInstance() error {
 
 	service.rdb = rdb
 	service.evQueueName = "infra_event_queue"
+	service.core = events.NewEventManager(rdb)
 	service.schedulerWaitGroup = &sync.WaitGroup{}
 	return nil
 }
@@ -61,7 +64,7 @@ func (service *InfrastructureEventManager) SendBootRequest(serviceKey string) er
 		return err
 	}
 
-	return nil
+	return service.core.Publish(service.generateEventMessage(BootInfrastructure, serviceKey))
 }
 
 func (service *InfrastructureEventManager) generateEventMessage(eventType string, serviceName string) EventMessage {
