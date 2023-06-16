@@ -5,7 +5,7 @@ import {
 } from '@angular-architects/module-federation-tools'
 import { environment } from '../environments/environment'
 import { DashboardComponent } from './dashboard/dashboard.component'
-import { loadRemoteModule } from '@nrwl/angular/mf'
+import { loadRemoteModule } from '@nx/angular/mf'
 
 export const AppRoutes: Routes = [
   {

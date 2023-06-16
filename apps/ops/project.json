@@ -1,10 +1,12 @@
 {
+  "name": "ops",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/ops/src",
   "prefix": "coffeewithegg",
   "targets": {
     "build": {
-      "executor": "@nrwl/angular:webpack-browser",
+      "executor": "@nx/angular:webpack-browser",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/ops",
@@ -57,7 +59,7 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@nrwl/angular:webpack-server",
+      "executor": "@nx/angular:webpack-dev-server",
       "configurations": {
         "production": {
           "browserTarget": "ops:build:production"
@@ -79,21 +81,21 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["apps/ops/**/*.ts", "apps/ops/**/*.html"]
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/ops"],
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/ops"],
       "options": {
         "jestConfig": "apps/ops/jest.config.ts",
         "passWithNoTests": true
       }
     },
     "serve-static": {
-      "executor": "@nrwl/angular:file-server",
+      "executor": "@nrwl/web:file-server",
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "ops:build",

@@ -1,4 +1,4 @@
-import { setRemoteDefinitions } from '@nrwl/angular/mf'
+import { setRemoteDefinitions } from '@nx/angular/mf'
 import { environment } from './environments/environment'
 
 setRemoteDefinitions({

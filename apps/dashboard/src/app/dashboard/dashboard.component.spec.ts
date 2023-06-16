@@ -64,4 +64,9 @@ describe('DashboardComponent', () => {
     )
     expect(projects).toHaveLength(1)
   })
+
+  it('should have an about section', async () => {
+    const about = fixture.nativeElement.querySelector('coffeewithegg-about')
+    expect(about).toBeTruthy()
+  })
 })

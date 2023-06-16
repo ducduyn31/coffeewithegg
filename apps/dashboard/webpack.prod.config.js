@@ -1,4 +1,4 @@
-const { withModuleFederation } = require('@nrwl/angular/module-federation')
+const { withModuleFederation } = require('@nx/angular/module-federation')
 const config = require('./module-federation.config')
 module.exports = withModuleFederation({
   ...config,
@@ -15,5 +15,5 @@ module.exports = withModuleFederation({
   remotes: [
     ['ops', 'https://ops.coffeewithegg.com'],
     ['sunnystream', 'https://sunnystream.coffeewithegg.com/'],
-  ]
-});
+  ],
+})

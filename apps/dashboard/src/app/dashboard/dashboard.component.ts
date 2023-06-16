@@ -4,6 +4,10 @@ import { Project } from '@coffeewithegg/data-access'
 import { ProjectService } from '../project.service'
 import { ProjectOverviewComponent } from '../project-overview/project-overview.component'
 import { CommonAngularModule } from '@coffeewithegg/common-angular'
+import { ProfileComponent } from '../profile/profile.component'
+import { HeaderComponent } from '../header/header.component'
+import { ContactComponent } from '../contact/contact.component'
+import { RouterModule } from '@angular/router'
 
 @Component({
   selector: 'coffeewithegg-dashboard',
@@ -24,8 +28,14 @@ export class DashboardComponent implements OnInit {
 }
 
 @NgModule({
-  imports: [CommonModule, CommonAngularModule],
-  declarations: [DashboardComponent, ProjectOverviewComponent],
+  imports: [CommonModule, CommonAngularModule, RouterModule],
+  declarations: [
+    DashboardComponent,
+    ProjectOverviewComponent,
+    ProfileComponent,
+    HeaderComponent,
+    ContactComponent,
+  ],
   exports: [DashboardComponent],
 })
 export class DashboardComponentModule {}
