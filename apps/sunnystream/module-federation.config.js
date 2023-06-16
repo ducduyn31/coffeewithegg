@@ -22,10 +22,10 @@ module.exports = {
       strictVersion: true,
       requiredVersion: '0.13.7',
     },
-    '@nrwl/react': {
+    '@nx/react': {
       singleton: true,
       strictVersion: true,
-      requiredVersion: '^14.3.6',
+      requiredVersion: '16.3.2',
     },
   },
 }

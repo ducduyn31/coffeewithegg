@@ -1,10 +1,11 @@
 {
+  "name": "base",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/base/src",
   "projectType": "library",
   "targets": {
     "build": {
-      "executor": "@nrwl/js:tsc",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/base",
@@ -14,15 +15,15 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["packages/base/**/*.ts"]
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/base"],
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/packages/base"],
       "options": {
         "jestConfig": "packages/base/jest.config.ts",
         "passWithNoTests": true

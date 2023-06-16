@@ -10,7 +10,8 @@ module.exports = {
     '../src/lib/**/*.stories.mdx',
     '../src/lib/**/*.stories.@(js|jsx|ts|tsx)',
   ],
-  addons: [...rootMain.addons],
+  // eslint-disable-next-line storybook/no-uninstalled-addons
+  addons: ['@storybook/addon-essentials', ...rootMain.addons],
   staticDirs: [{ from: '../../base/assets', to: '/assets/common' }],
   webpackFinal: async (config, { configType }) => {
     // apply any global webpack configs that might have been specified in .storybook/main.js

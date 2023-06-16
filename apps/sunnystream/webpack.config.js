@@ -47,6 +47,7 @@ module.exports = (config) => {
     output: {
       uniqueName: 'sunnystream',
       publicPath: 'auto',
+      scriptType: 'text/javascript',
     },
     optimization: {
       minimize: false,

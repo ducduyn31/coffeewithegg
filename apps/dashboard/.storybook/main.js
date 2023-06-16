@@ -10,7 +10,7 @@ module.exports = {
     '../src/app/**/*.stories.mdx',
     '../src/app/**/*.stories.@(js|jsx|ts|tsx)',
   ],
-  addons: [...rootMain.addons],
+  addons: ['@storybook/addon-essentials', ...rootMain.addons],
   staticDirs: [
     {
       from: '../../../packages/base/assets',

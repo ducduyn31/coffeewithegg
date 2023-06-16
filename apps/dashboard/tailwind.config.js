@@ -1,4 +1,4 @@
-const { createGlobPatternsForDependencies } = require('@nrwl/angular/tailwind')
+const { createGlobPatternsForDependencies } = require('@nx/angular/tailwind')
 const { join } = require('path')
 
 module.exports = {
@@ -13,8 +13,9 @@ module.exports = {
   theme: {
     screens: {
       mobile: { max: '480px' },
-      tablet: { min: '481px', max: '1024px' },
-      desktop: { min: '1025px' },
+      tablet: { min: '481px', max: '1023px' },
+      laptop: { min: '1024px', max: '1439px' },
+      desktop: { min: '1440px' },
     },
     colors: {
       transparent: 'transparent',

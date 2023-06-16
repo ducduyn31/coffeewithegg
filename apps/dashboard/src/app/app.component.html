@@ -1,9 +1,11 @@
-<div class="bg-bg01 w-[100vw] h-[100vh] grid grid-cols-12 overflow-y-scroll">
+<div class="bg-bg01 w-screen h-screen grid grid-cols-12 overflow-y-scroll">
   <coffeewithegg-sidebar
     *ngIf="shouldShowSidebar"
     class="fixed col-span-2 z-50"
   ></coffeewithegg-sidebar>
-  <div class="col-span-10 col-start-3">
+  <div
+    [ngClass]="shouldShowSidebar ? 'col-start-3 col-span-10' : 'col-span-12'"
+  >
     <router-outlet></router-outlet>
   </div>
 </div>

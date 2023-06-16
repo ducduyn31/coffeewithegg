@@ -1,11 +1,12 @@
 {
+  "name": "common-react",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/common-react/src",
   "projectType": "library",
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nrwl/web:rollup",
+      "executor": "@nrwl/rollup:rollup",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/packages/common-react",
@@ -13,7 +14,7 @@
         "project": "packages/common-react/package.json",
         "entryFile": "packages/common-react/src/index.ts",
         "external": ["@emotion/react/jsx-runtime"],
-        "rollupConfig": "@nrwl/react/plugins/bundle-rollup",
+        "rollupConfig": "@nx/react/plugins/bundle-rollup",
         "postcssConfig": "packages/common-react/postcss.config.js",
         "compiler": "babel",
         "assets": [
@@ -26,28 +27,25 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["packages/common-react/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/packages/common-react"],
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/packages/common-react"],
       "options": {
         "jestConfig": "packages/common-react/jest.config.ts",
         "passWithNoTests": true
       }
     },
     "storybook": {
-      "executor": "@nrwl/storybook:storybook",
+      "executor": "@nx/storybook:storybook",
       "options": {
-        "uiFramework": "@storybook/react",
         "port": 4400,
-        "config": {
-          "configFolder": "packages/common-react/.storybook"
-        }
+        "configDir": "packages/common-react/.storybook"
       },
       "configurations": {
         "ci": {
@@ -56,14 +54,11 @@
       }
     },
     "build-storybook": {
-      "executor": "@nrwl/storybook:build",
-      "outputs": ["{options.outputPath}"],
+      "executor": "@nx/storybook:build",
+      "outputs": ["{options.outputDir}"],
       "options": {
-        "uiFramework": "@storybook/react",
-        "outputPath": "dist/storybook/common-react",
-        "config": {
-          "configFolder": "packages/common-react/.storybook"
-        }
+        "configDir": "packages/common-react/.storybook",
+        "outputDir": "dist/storybook/common-react"
       },
       "configurations": {
         "ci": {

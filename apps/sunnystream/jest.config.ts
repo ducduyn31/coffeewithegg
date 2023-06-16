@@ -4,7 +4,7 @@ export default {
   preset: '../../jest.preset.js',
   transform: {
     '^.+\\.(js|jsx|ts|tsx|css|json)?$': 'ts-jest',
-    '^(?!.*\\.svg$)': '@nrwl/react/plugins/jest',
+    '^(?!.*\\.svg$)': '@nx/react/plugins/jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../coverage/apps/sunnystream',

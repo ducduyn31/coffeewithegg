@@ -1,10 +1,11 @@
 {
+  "name": "sunnystream",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/sunnystream/src",
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nrwl/web:webpack",
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
@@ -15,7 +16,7 @@
         "main": "apps/sunnystream/src/main.tsx",
         "polyfills": "apps/sunnystream/src/polyfills.ts",
         "tsConfig": "apps/sunnystream/tsconfig.app.json",
-        "postcssConfig": "apps/sunnystream/postcss.config.json",
+        "postcssConfig": "apps/sunnystream/postcss.config.js",
         "assets": [
           "apps/sunnystream/src/favicon.ico",
           "apps/sunnystream/src/assets"
@@ -49,7 +50,7 @@
       }
     },
     "serve": {
-      "executor": "@nrwl/web:dev-server",
+      "executor": "@nx/webpack:dev-server",
       "defaultConfiguration": "development",
       "options": {
         "port": 4202,
@@ -69,22 +70,22 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["apps/sunnystream/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/sunnystream"],
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/sunnystream"],
       "options": {
         "jestConfig": "apps/sunnystream/jest.config.ts",
         "passWithNoTests": true
       }
     },
     "serve-static": {
-      "executor": "@nrwl/web:file-server",
+      "executor": "@nx/web:file-server",
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "sunnystream:build",
