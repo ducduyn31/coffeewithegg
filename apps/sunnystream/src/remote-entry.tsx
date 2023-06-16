@@ -1,5 +1,5 @@
-import { createRoot } from "react-dom/client";
-import Index from "./app";
+import { createRoot } from 'react-dom/client'
+import Index from './app'
 
 class MfeSunnyStream extends HTMLElement {
   connectedCallback() {
