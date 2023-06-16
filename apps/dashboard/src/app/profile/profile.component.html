@@ -1,20 +1,24 @@
-<section class="w-full h-screen px-105 flex justify-center items-center">
-  <div class="grid grid-cols-2">
-    <div class="font-raleway">
+<section
+  class="w-full h-screen px-105 mobile:px-0 flex justify-center items-center"
+>
+  <div class="grid grid-cols-2 tablet:grid-cols-1 mobile:grid-cols-1 gap-x-48">
+    <div class="font-raleway font-light desktop:text-h5 text-p text-grey01">
       <p class="font-bold text-h3 text-background">
         Hello,<br />
         My name is Daniel
       </p>
       <br />
-      <p class="font-light text-h5 text-grey01">
-        I'm a postgrad student at UTS, majored in Data Analytics. My areas of
-        interest include problem-solving, cloud infrastructure, machine
-        learning, and blockchain. I'm a dedicated Software Engineer with a
-        passion for creating scalable and user-centric applications. With a
-        proven track record in leading software development projects and winning
-        hackathons, I thrive in innovative, fast-paced environments. I'm always
-        eager to embrace new challenges and leverage my expertise to make a real
-        difference.
+      <p>I'm a postgrad student at UTS, majored in Data Analytics.</p>
+      <p>
+        My areas of interest include problem-solving, cloud infrastructure,
+        machine learning, and blockchain.
+      </p>
+      <p>
+        I'm a dedicated Software Engineer with a passion for creating scalable
+        and user-centric applications. With a proven track record in leading
+        software development projects and winning hackathons, I thrive in
+        innovative, fast-paced environments. I'm always eager to embrace new
+        challenges and leverage my expertise to make a real difference.
       </p>
       <br />
       <a
@@ -24,13 +28,15 @@
         >Get My Resume</a
       >
     </div>
-    <div class="relative">
+    <div class="relative max-w-md tablet:invisible mobile:invisible">
       <img
-        class="absolute z-30 top-[-13rem]"
-        src="https://picsum.photos/618/648"
+        class="absolute z-10 object-cover w-[90%] h-auto"
+        src="https://picsum.photos/512/512"
         alt=""
       />
-      <div class="absolute w-[36rem] h-[34rem] bg-grey04 left-[10rem]"></div>
+      <div
+        class="absolute w-[90%] h-0 pb-[90%] bg-grey04 top-1/4 left-1/4"
+      ></div>
     </div>
   </div>
 </section>

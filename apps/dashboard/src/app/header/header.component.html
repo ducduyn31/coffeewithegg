@@ -1,16 +1,16 @@
 <header class="pt-56 px-56 flex justify-between absolute w-full">
   <div class="font-bold text-h3 font-sans text-background">CWE.</div>
-  <div class="flex font-raleway font-light gap-x-40 text-h5">
+  <div class="flex font-raleway font-light gap-x-40 text-h5 mobile:invisible">
     <button
       *ngFor="let page of pages"
       (click)="routeTo(page.page)"
-      class="hover:underline hover:text-background text-grey02"
+      class="hover:underline hover:text-background text-grey02 z-50"
     >
       {{ page.label }}
     </button>
   </div>
 </header>
-<aside class="absolute left-56 top-1/2 z-50">
+<aside class="absolute left-56 top-1/2 z-50 mobile:invisible">
   <ul class="flex flex-col border-background">
     <button
       *ngFor="let page of pages"
@@ -20,7 +20,9 @@
     ></button>
   </ul>
 </aside>
-<aside class="absolute right-56 top-1/2 font-raleway text-ps font-normal z-50">
+<aside
+  class="absolute right-56 top-1/2 font-raleway text-ps font-normal z-50 mobile:invisible"
+>
   <ul class="flex flex-col gap-y-24 text-grey02 text-right">
     <li class="mt-2 animated-list-item">
       <a

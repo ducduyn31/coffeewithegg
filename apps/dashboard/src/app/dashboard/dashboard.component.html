@@ -1,13 +1,11 @@
 <coffeewithegg-header></coffeewithegg-header>
-<div class="w-full h-full p-72">
+<div class="w-full h-full p-72 mobile:px-56">
   <coffeewithegg-profile id="page-profile"></coffeewithegg-profile>
   <section
     class="w-full h-screen px-105 flex justify-center items-center"
     id="page-projects"
   >
-    <ul
-      class="grid mobile:grid-cols-3 tablet:grid-cols-3 desktop:grid-cols-5 bg-bg01"
-    >
+    <ul class="grid mobile:grid-cols-3 tablet:grid-cols-3 grid-cols-5 bg-bg01">
       <li *ngFor="let item of projects | keyvalue">
         <coffeewithegg-project-overview
           [project]="item.value"
