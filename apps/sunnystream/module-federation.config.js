@@ -6,11 +6,17 @@ module.exports = {
   },
   library: { type: 'var', name: 'sunnystream' },
   shared: {
-    react: { singleton: true, strictVersion: true, requiredVersion: '18.2.0' },
+    react: {
+      singleton: true,
+      strictVersion: true,
+      requiredVersion: '18.2.0',
+      eager: false,
+    },
     'react-dom': {
       singleton: true,
       strictVersion: true,
       requiredVersion: '18.2.0',
+      eager: false,
     },
     'core-js': {
       singleton: true,

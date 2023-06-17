@@ -13,7 +13,7 @@
         "outputPath": "dist/apps/sunnystream",
         "index": "apps/sunnystream/src/index.html",
         "baseHref": "/",
-        "main": "apps/sunnystream/src/main.tsx",
+        "main": "apps/sunnystream/src/main.ts",
         "polyfills": "apps/sunnystream/src/polyfills.ts",
         "tsConfig": "apps/sunnystream/tsconfig.app.json",
         "postcssConfig": "apps/sunnystream/postcss.config.js",
