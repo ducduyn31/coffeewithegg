@@ -8,6 +8,7 @@ module.exports = (config) => {
     output: {
       uniqueName: 'sunnystream',
       publicPath: 'auto',
+      scriptType: 'text/javascript',
     },
     optimization: { runtimeChunk: false, minimize: false },
     plugins: [new ModuleFederationPlugin(moduleFederationConfig)],

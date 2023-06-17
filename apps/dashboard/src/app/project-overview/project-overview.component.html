@@ -1,15 +1,15 @@
 <button class="container" (click)="onClick()">
   <cwe-card>
-    <div class="subcontainer">
+    <div class="flex flex-col mobile:flex-row h-full justify-between">
       <div
         *ngIf="project && project.technologies && project.technologies.length"
-        class="technologies"
+        class="flex flex-col-reverse"
       >
         <span *ngFor="let tech of project.technologies">
           <cwe-icon [name]="tech.key"></cwe-icon>
         </span>
       </div>
-      <div *ngIf="project" class="info text-center">
+      <div *ngIf="project" class="info text-center mobile:w-1/2">
         <p class="text-background text-h6">{{ project.name }}</p>
         <p class="text-grey01 text-ps">{{ project.description }}</p>
       </div>
