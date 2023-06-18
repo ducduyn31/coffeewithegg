@@ -6,13 +6,13 @@ import { filter, map, Observable } from 'rxjs'
   providedIn: 'root',
 })
 export class RouterService {
-  private $isDashboard: Observable<[boolean, string]> | undefined
+  private isDashboard$: Observable<[boolean, string]> | undefined
 
   constructor(private readonly router: Router) {}
 
   public onDashboardChange(): Observable<[boolean, string]> {
-    if (!this.$isDashboard) {
-      this.$isDashboard = this.router.events.pipe(
+    if (!this.isDashboard$) {
+      this.isDashboard$ = this.router.events.pipe(
         filter((ev) => ev instanceof NavigationEnd),
         map((ev) => {
           const url = this.router.parseUrl((ev as NavigationEnd).url)
@@ -25,6 +25,6 @@ export class RouterService {
       )
     }
 
-    return this.$isDashboard
+    return this.isDashboard$
   }
 }

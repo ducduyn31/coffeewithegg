@@ -13,6 +13,8 @@ import { HttpLink } from 'apollo-angular/http'
 import { InMemoryCache } from '@apollo/client'
 import { environment } from '../environments/environment'
 import { HttpClientModule } from '@angular/common/http'
+import { AuthModule } from '@auth0/auth0-angular'
+import { SharedModule } from './shared/shared.module'
 
 @NgModule({
   declarations: [AppComponent, SidebarComponent],
@@ -23,6 +25,14 @@ import { HttpClientModule } from '@angular/common/http'
     CommonAngularModule,
     DashboardComponentModule,
     HttpClientModule,
+    SharedModule,
+    AuthModule.forRoot({
+      domain: environment.authDomain,
+      clientId: environment.authClientId,
+      authorizationParams: {
+        redirect_uri: window.location.origin,
+      },
+    }),
     RouterModule.forRoot(AppRoutes, { initialNavigation: 'enabledBlocking' }),
   ],
   providers: [

@@ -4,6 +4,8 @@
 
 export const environment = {
   production: false,
+  authDomain: 'dev-zlpct8m34gyipe1r.au.auth0.com',
+  authClientId: 'W1JyvrGHPIIyCYQoY2CmgxWOybXVHlBE',
 }
 
 /*

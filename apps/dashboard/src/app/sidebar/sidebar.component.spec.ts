@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing'
 
 import { SidebarComponent } from './sidebar.component'
 import { RouterTestingModule } from '@angular/router/testing'
-import { ProjectService } from '../project.service'
+import { ProjectService } from '../singletons/project/project.service'
 import { Observable, of } from 'rxjs'
 import { mockProject } from '../mocks'
 import { Project } from '@coffeewithegg/data-access'

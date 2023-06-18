@@ -7,6 +7,8 @@ export const environment = {
   backendServer: 'http://localhost:4001/graphql',
   opsEntry: 'http://localhost:4201',
   sunnyStreamEntry: 'http://localhost:4202/remoteEntry.js',
+  authDomain: 'dev-zlpct8m34gyipe1r.au.auth0.com',
+  authClientId: 'W1JyvrGHPIIyCYQoY2CmgxWOybXVHlBE',
 }
 
 /*

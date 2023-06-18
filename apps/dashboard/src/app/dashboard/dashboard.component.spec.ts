@@ -5,7 +5,7 @@ import {
   ApolloTestingController,
   ApolloTestingModule,
 } from 'apollo-angular/testing'
-import { ProjectService } from '../project.service'
+import { ProjectService } from '../singletons/project/project.service'
 import { Observable, of } from 'rxjs'
 import { Project } from '@coffeewithegg/data-access'
 import { mockProject } from '../mocks'

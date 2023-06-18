@@ -3,16 +3,26 @@ import { CommonModule } from '@angular/common'
 import { RouterModule } from '@angular/router'
 
 import { RemoteEntryComponent } from './entry.component'
-import { NxWelcomeComponent } from './nx-welcome.component'
+import { LoginComponent } from '../login/login.component'
+import { AuthGuard } from '@auth0/auth0-angular'
 
 @NgModule({
-  declarations: [RemoteEntryComponent, NxWelcomeComponent],
+  declarations: [RemoteEntryComponent, LoginComponent],
   imports: [
     CommonModule,
     RouterModule.forChild([
       {
         path: '',
         component: RemoteEntryComponent,
+        pathMatch: 'full',
+      },
+      {
+        path: 'dashboard',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('../ops-dashboard/ops-dashboard.module').then(
+            (m) => m.OpsDashboardComponentModule,
+          ),
       },
     ]),
   ],
