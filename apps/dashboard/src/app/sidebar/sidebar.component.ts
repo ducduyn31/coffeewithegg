@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core'
 import { Project } from '@coffeewithegg/data-access'
 import { Router } from '@angular/router'
-import { ProjectService } from '../project.service'
+import { ProjectService } from '../singletons/project/project.service'
 
 @Component({
   selector: 'coffeewithegg-sidebar',

@@ -7,7 +7,7 @@ import {
 } from 'apollo-angular/testing'
 import { GetAllProjectsGQL } from '@coffeewithegg/data-access'
 import { Apollo } from 'apollo-angular'
-import { mockProject } from './mocks'
+import { mockProject } from '../../mocks'
 
 describe('ProjectService', () => {
   let service: ProjectService

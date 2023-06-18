@@ -3,6 +3,7 @@ export default [
   'collapse',
   'dashboard',
   'hamburger',
+  'logo',
   'ops',
   'react',
   'sunnystream',

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { Subscription } from 'rxjs'
-import { RouterService } from './router.service'
+import { RouterService } from './singletons/router/router.service'
 
 @Component({
   selector: 'coffeewithegg-root',

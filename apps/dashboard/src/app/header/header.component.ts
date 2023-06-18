@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core'
-import { RouterService } from '../router.service'
+import { RouterService } from '../singletons/router/router.service'
 import { Subscription } from 'rxjs'
 import { Router } from '@angular/router'
 

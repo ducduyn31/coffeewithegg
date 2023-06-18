@@ -1,13 +1,14 @@
 import { Component, NgModule, OnInit, ViewEncapsulation } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { Project } from '@coffeewithegg/data-access'
-import { ProjectService } from '../project.service'
+import { ProjectService } from '../singletons/project/project.service'
 import { ProjectOverviewComponent } from '../project-overview/project-overview.component'
 import { CommonAngularModule } from '@coffeewithegg/common-angular'
 import { ProfileComponent } from '../profile/profile.component'
 import { HeaderComponent } from '../header/header.component'
 import { ContactComponent } from '../contact/contact.component'
 import { RouterModule } from '@angular/router'
+import { SharedModule } from '../shared/shared.module'
 
 @Component({
   selector: 'coffeewithegg-dashboard',
@@ -28,7 +29,7 @@ export class DashboardComponent implements OnInit {
 }
 
 @NgModule({
-  imports: [CommonModule, CommonAngularModule, RouterModule],
+  imports: [CommonModule, CommonAngularModule, RouterModule, SharedModule],
   declarations: [
     DashboardComponent,
     ProjectOverviewComponent,

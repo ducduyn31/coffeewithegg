@@ -1,0 +1,12 @@
+<header
+  class="flex flex-row justify-between px-105 py-16 bg-white text-background"
+>
+  <p>Welcome, {{ (this.auth.user$ | async)?.name || 'Guest' }}!</p>
+  <button (click)="logout()">Log out</button>
+</header>
+<section
+  class="card mx-105 mt-56 bg-white rounded-8 p-12"
+  *ngIf="isAdmin$ | async"
+>
+  <p class="text-background text-p font-bold">Projects</p>
+</section>

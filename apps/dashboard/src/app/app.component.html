@@ -3,9 +3,7 @@
     *ngIf="shouldShowSidebar"
     class="fixed col-span-2 z-50"
   ></coffeewithegg-sidebar>
-  <div
-    [ngClass]="shouldShowSidebar ? 'col-start-3 col-span-10' : 'col-span-12'"
-  >
+  <div class="col-span-12" [ngClass]="shouldShowSidebar ? 'ml-72' : ''">
     <router-outlet></router-outlet>
   </div>
 </div>
