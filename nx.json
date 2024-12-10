@@ -1,9 +1,7 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "npmScope": "coffeewithegg",
-  "affected": {
-    "defaultBase": "main"
-  },
+  "affected": { "defaultBase": "main" },
   "tasksRunnerOptions": {
     "default": {
       "runner": "nx/tasks-runners/default",
@@ -14,7 +12,8 @@
           "test",
           "e2e",
           "build-storybook"
-        ]
+        ],
+        "accessToken": "MzBmYzNjZTEtNTIwNi00MzAxLTg0YTQtMmY0NWQyMjRmNWQwfHJlYWQtd3JpdGU="
       }
     }
   },
@@ -23,12 +22,8 @@
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
     },
-    "e2e": {
-      "inputs": ["default", "^production"]
-    },
-    "lint": {
-      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
-    },
+    "e2e": { "inputs": ["default", "^production"] },
+    "lint": { "inputs": ["default", "{workspaceRoot}/.eslintrc.json"] },
     "build-storybook": {
       "inputs": ["default", "^production", "{workspaceRoot}/.storybook/**/*"]
     },
@@ -36,10 +31,7 @@
       "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
     }
   },
-  "workspaceLayout": {
-    "appsDir": "apps",
-    "libsDir": "packages"
-  },
+  "workspaceLayout": { "appsDir": "apps", "libsDir": "packages" },
   "generators": {
     "@nx/angular:application": {
       "style": "scss",
@@ -47,26 +39,16 @@
       "unitTestRunner": "jest",
       "e2eTestRunner": "cypress"
     },
-    "@nx/angular:library": {
-      "linter": "eslint",
-      "unitTestRunner": "jest"
-    },
-    "@nx/angular:component": {
-      "style": "scss"
-    },
+    "@nx/angular:library": { "linter": "eslint", "unitTestRunner": "jest" },
+    "@nx/angular:component": { "style": "scss" },
     "@nx/react": {
       "application": {
         "style": "@emotion/styled",
         "linter": "eslint",
         "babel": true
       },
-      "component": {
-        "style": "@emotion/styled"
-      },
-      "library": {
-        "style": "@emotion/styled",
-        "linter": "eslint"
-      }
+      "component": { "style": "@emotion/styled" },
+      "library": { "style": "@emotion/styled", "linter": "eslint" }
     }
   },
   "defaultProject": "dashboard",
